@@ -10,3 +10,4 @@ myprojectenv
 venv
 myproject.sock
 tests/__pycache__
+src/__pycache__
