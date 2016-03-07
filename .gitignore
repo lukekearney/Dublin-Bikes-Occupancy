@@ -7,4 +7,6 @@
 out
 gen
 myprojectenv
+venv
 myproject.sock
+tests/__pycache__
