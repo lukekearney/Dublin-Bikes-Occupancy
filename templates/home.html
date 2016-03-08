@@ -40,13 +40,27 @@
 
 				}
 
-				function getMapData(){
+				function getMapData(callback){
+					//based on http://www.w3schools.com/ajax/tryit.asp?filename=tryajax_get
 					var xmlhttp = new XMLHttpRequest();
 					var url = "https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=5a523b8e0346cd6360130dd031e990283bfb9c8b";
+					
 
 					xmlhttp.onreadystatechange = function () {
 						if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-							document.getElementById("response").innerHTML = (xmlhttp.response);
+							// success
+							// check if callback function is defined
+							if (callback){
+								// run callback
+								callback(xmlhttp.response);
+							} else {
+								// default response to successful request
+								console.log("Request completed successfully: ");
+								console.log(response);
+							}
+						} else if (xmlhttp.readyState === 4 && (xmlhttp.status >= 400 || xmlhttp.status < 500)){
+							// error handling
+							console.error(xmlhttp.statusText)
 						}
 					}
 					xmlhttp.open("GET", url, true)
@@ -58,6 +72,10 @@
 					init: function(phrase){
 						// set up the map
 						setUpMap();
+						getMapData(function(resp){
+							console.log("callback");
+							console.log(resp.length);
+						});
 					},
 
 					addMarkers: function(json){
