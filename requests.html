@@ -1,0 +1,29 @@
+<!--http://www.w3schools.com/ajax/tryit.asp?filename=tryajax_get-->
+
+<!DOCTYPE html>
+<html>
+	<body>
+		
+		<style>
+		
+		p{
+			background-color: black;
+			color:pink;
+		}
+		</style>
+		
+		<p id="response"></p>
+		<script>
+			var xmlhttp = new XMLHttpRequest();
+			var url = "https://api.jcdecaux.com/vls/v1/stations?contract=Dublin&apiKey=5a523b8e0346cd6360130dd031e990283bfb9c8b";
+
+			xmlhttp.onreadystatechange = function () {
+				if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
+					document.getElementById("response").innerHTML = (xmlhttp.response);
+				}
+			}
+			xmlhttp.open("GET", url, true)
+			xmlhttp.send()
+		</script>
+	</body>
+</html>
