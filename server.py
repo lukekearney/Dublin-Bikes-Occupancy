@@ -25,6 +25,6 @@ def api():
 
 if __name__ == "__main__":
     application.debug = True
-    application.run(host='localhost')
+    application.run(host='0.0.0.0')
     
 # localhost:5000/api?racknum=1
