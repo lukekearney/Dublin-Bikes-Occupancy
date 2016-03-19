@@ -1,14 +1,16 @@
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 
-import sqlite3, os
+import sqlite3, os, json
 import src
 
 path = os.path.dirname(os.path.realpath(__file__))
+
 conn = sqlite3.connect(path + "/bikes.db")
 
-c = conn.cursor()
 application = Flask(__name__)
+
+
 
 @application.route("/")
 def hello():
@@ -28,13 +30,33 @@ def api():
     else:
         return racknum
 
-# Add whatever api route you want here
+# Just adding a route to pull down static data. This can be adjusted later
 @application.route('/api/static')
 def static_api():
+    # open db connection
+    conn = sqlite3.connect(path + "/bikes.db")
 
+    c = conn.cursor()
+    data = c.execute("SELECT number, name, address, position_lat, position_long, banking FROM static ORDER BY number")
+    data = data.fetchall()
+    # convert to array of dictionaries
+    for i in range(0, len(data)):
+        data[i] = {
+            "number": data[i][0],
+            "name": data[i][1],
+            "address": data[i][2],
+            "position": {
+                "lat": data[i][3],
+                "lang": data[i][4]
+            },
+            "banking": data[i][5] == 'True'
+        }
 
+    # close db connection
+    conn.close()
+    return json.dumps(data)
     
-    
+
 
 if __name__ == "__main__":
     application.debug = True
