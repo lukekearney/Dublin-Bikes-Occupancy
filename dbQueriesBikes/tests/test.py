@@ -1,5 +1,12 @@
+# Reference:
+# Nose.readthedocs.org. 'Writing Tests - Nose 1.3.7 Documentation', available: 
+# https://nose.readthedocs.org/en/latest/writing_tests.html [Accessed: 25/03/16]
+
+__author__ = "Ellen Rushe"
+
 from src.dbQueries import dbQueries
 
+# Test using 'bikes' database.
 dbq = dbQueries('test_db_bikes.db')
 
 def test_station_to_ID():
@@ -7,7 +14,6 @@ def test_station_to_ID():
     
 def test_station_address_by_name():
     assert dbq.station_address_by_name('BLACKHALL PLACE')== 'Blackhall Place'
-  
 
 def test_station_address_by_ID():
     assert dbq.station_address_by_ID('88')== 'Blackhall Place'
@@ -30,7 +36,6 @@ def test_status ():
      
 def test_num_bike_stands():
     assert dbq.num_bike_stands('42', '1457367302')==30
-
      
 def test_latest_time_logged():
     dbq.latest_time_logged('88')=='Fri Mar 11 19:15:01 2016'
@@ -38,7 +43,6 @@ def test_latest_time_logged():
 def test_num_bike_stations():
     assert dbq.num_bike_stations()==101
 
-     
 def test_take_credit():
     assert dbq.take_credit('88')==False and dbq.take_credit('33')==True
     
