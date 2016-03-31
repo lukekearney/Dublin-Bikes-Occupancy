@@ -155,13 +155,14 @@ class dbQueries:
                 return True
             
     
-    def __ct__(self, time):
-        print(datetime.datetime.fromtimestamp(int(time)).strftime('%Y-%m-%d %H:%M:%S'))
+    def __ct__(self, log_time):
+        print(datetime.datetime.fromtimestamp(int(log_time)).strftime('%Y-%m-%d %H:%M:%S'))
+        # http://stackoverflow.com/questions/3682748/converting-unix-timestamp-string-to-readable-date-in-python
 
     def convert_time(self):
         conn = sqlite3.connect('bikes.db')
         c = conn.cursor()
-        c.execute("SELECT logged FROM dynamic WHERE CAST(logged as integer)<=1457748000 AND CAST(logged as integer)>=1457733600;")
+        c.execute("SELECT logged FROM dynamic;")
         result = c.fetchall()
         for i in range(len(result)):
             self.__ct__(result[i][0])
