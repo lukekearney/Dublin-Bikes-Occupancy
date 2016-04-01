@@ -149,27 +149,75 @@ class dbQueries:
  
     def convert_time(self):
         c = self.conn.cursor()
-        c.execute("SELECT logged FROM dynamic;")
+        c.execute("SELECT logged FROM dynamic")
         result = c.fetchall()
         times = []
         for i in range(len(result)):
             times.append(self.__ct__(result[i][0]))
         return times
 
+    def get_day_and_time(self, timestamp):
+        m_date = datetime.datetime.fromtimestamp(timestamp)
+        # this will get the week day from the date object
+        # note these are integer indexes. Monday is 0, Tues is 1, Wed 2 etc
+        day = m_date.weekday()
+
+        hour = m_date.hour
+        minute = m_date.minute
+        # normalisation code if needed. I checked. Doesn't seem to be a problem
+        # if 0 <= m_date.minute < 10:
+        #     # its around the hour (00) mark
+        #     minute = 0
+        # elif 15 <= m_date.minute < 25:
+        #     minute = 15
+        # elif 30 <= m_date.minute < 40:
+        #     minute = 30
+        # else:
+        #     minute = 45
+
+        return (day, hour, minute)
+
+    def num_unique_days(self):
+        c = self.conn.cursor()
+        query = c.execute("SELECT distinct day FROM dynamic")
+        items = c.fetchall()
+        return items
+
+
     def add_time_to_db(self):
         c = self.conn.cursor()
-        c.execute("ALTER TABLE dynamic ADD COLUMN 'date_time' 'String' ")
-        
-#         @Luke the problem is somewhere here. times should be a list of string containing dtea/time
-#         the list comprehension wraps every string in a tuple to allow the sqlite function to work
-#         not getting any errors, just running infinitely for me.
-#         also once you run this once, you'll get an error about the column date_time already existing
-        times = self.convert_time()
-        self.conn.executemany("UPDATE dynamic SET 'date_time' =  ?", ((val,) for val in times))
-        self.conn.commit()
+        # this isn't necessary once the database is updated
+        # c.execute("ALTER TABLE dynamic ADD COLUMN 'date_time' 'String' ")
+        #
+        # @Luke the problem is somewhere here. times should be a list of string containing dtea/time
+        # the list comprehension wraps every string in a tuple to allow the sqlite function to work
+        # not getting any errors, just running infinitely for me.
+        # also once you run this once, you'll get an error about the column date_time already existing (see above as to why this was happening)
+
+        # this query will fetch unique rows. No station of a certain number will be logged at the same time as other stations of the same number
+        query = c.execute("SELECT logged, number FROM dynamic")
+        items = c.fetchall()
+        #print(items)
+        for item in items:
+            info = self.get_day_and_time(item[0])
+
+            # print((info[0], info[1], info[2], item[1], item[0]))
+            # print(info)
+            # print(item)
+            # self.conn.execute("UPDATE dynamic SET day = " + str(info[0]) + ", hour = " + str(info[1]) + ", minute = " + str(info[2]) + "WHERE")
+            query = "UPDATE dynamic SET day = " + str(info[0]) + \
+            ", hour = " + str(info[1]) + \
+            ", minute = " + str(info[2]) + \
+            " WHERE number = " + str(item[1]) + \
+            " AND logged = " + str(item[0])
+            #print(query)
+
+            self.conn.execute(query)
+            self.conn.commit()
         
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
     print(db.latest_time_logged(10))
-    db.add_time_to_db()
+    print(db.num_unique_days())
+    # db.add_time_to_db()
 
