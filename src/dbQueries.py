@@ -2,6 +2,7 @@ __author__ = "Ellen Rushe"
 
 import sqlite3
 import time
+import datetime
 
 class dbQueries:
     
@@ -158,8 +159,17 @@ class dbQueries:
     def add_time_to_db(self):
         c = self.conn.cursor()
         c.execute("ALTER TABLE dynamic ADD COLUMN 'date_time' 'String' ")
-
+        
+#         @Luke the problem is somewhere here. times should be a list of string containing dtea/time
+#         the list comprehension wraps every string in a tuple to allow the sqlite function to work
+#         not getting any errors, just running infinitely for me.
+#         also once you run this once, you'll get an error about the column date_time already existing
+        times = self.convert_time()
+        self.conn.executemany("UPDATE dynamic SET 'date_time' =  ?", ((val,) for val in times))
+        self.conn.commit()
+        
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
     print(db.latest_time_logged(10))
+    db.add_time_to_db()
 
