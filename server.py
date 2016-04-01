@@ -55,7 +55,30 @@ def static_api():
     # close db connection
     conn.close()
     return json.dumps(data)
-    
+
+@application.route('/about')
+def about():
+    data = [
+        {
+            "id": 1,
+            "name": "Some aname"
+
+        },
+
+        {
+            "id": 2,
+            "name": "Some aname2"
+
+        },
+
+        {
+            "id": 2,
+            "name": "Some aname3"
+
+        }
+    ]
+
+    return render_template('test.html', mData = data)
 
 
 if __name__ == "__main__":
