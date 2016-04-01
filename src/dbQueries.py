@@ -1,16 +1,3 @@
-# References:
-#[1] "11.13. Sqlite3 — DB-API 2.0 Interface For Sqlite Databases — Python 2.7.11 Documentation". 
-#     Docs.python.org, available: https://docs.python.org/2/library/sqlite3.html [Accessed: 25/03/16]
-
-#[2] "Sqlite3 – Embedded Relational Database - Python Module Of The Week". Pymotw.com,
-#     available: https://pymotw.com/2/sqlite3/ [Accessed: 25/03/16]
-
-#[3] "15.3. Time — Time Access And Conversions — Python 2.7.11 Documentation". Docs.python.org, 
-#     available: https://docs.python.org/2/library/time.html [Accessed: 25/03/16]
-   
-#[4] "SQL COUNT() Function". W3schools.com, 
-#     available: http://www.w3schools.com/sql/sql_func_count.asp [Accessed: 25/03/16]
-
 __author__ = "Ellen Rushe"
 
 import sqlite3
@@ -156,14 +143,23 @@ class dbQueries:
             
     
     def __ct__(self, log_time):
-        print(datetime.datetime.fromtimestamp(int(log_time)).strftime('%Y-%m-%d %H:%M:%S'))
+        return datetime.datetime.fromtimestamp(int(log_time)).strftime('%Y-%m-%d %H:%M:%S')
         # http://stackoverflow.com/questions/3682748/converting-unix-timestamp-string-to-readable-date-in-python
-
+ 
     def convert_time(self):
-        conn = sqlite3.connect('bikes.db')
-        c = conn.cursor()
+        c = self.conn.cursor()
         c.execute("SELECT logged FROM dynamic;")
         result = c.fetchall()
+        times = []
         for i in range(len(result)):
-            self.__ct__(result[i][0])
+            times.append(self.__ct__(result[i][0]))
+        return times
+
+    def add_time_to_db(self):
+        c = self.conn.cursor()
+        c.execute("ALTER TABLE dynamic ADD COLUMN 'date_time' 'String' ")
+
+if(__name__ == "__main__"):
+    db = dbQueries("../bikes.db")
+    print(db.latest_time_logged(10))
 
