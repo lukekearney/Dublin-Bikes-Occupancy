@@ -7,7 +7,10 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build-css": "node-sass --include-path scss static/scss/main.scss static/css/main.css --output-style expanded",
+    "watch-css": "nodemon -e scss -x \"npm run build-css\"",
+    "build-hb": "handlebars templates/> js/templates.js"
   },
   "repository": {
     "type": "git",
