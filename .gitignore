@@ -15,3 +15,5 @@ src/__pycache__
 .pydevproject
 .idea
 .settings
+static/css
+node_modules
