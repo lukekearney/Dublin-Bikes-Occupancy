@@ -234,23 +234,22 @@ class dbQueries:
         Parameter(s): ID of station (id or list).
         Returns: an array of dictionaries containing occupancy data, day, hour and minute
         '''
-        query = self.QueryBuilder().select(
-            ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"],
-            "dynamic").where([
-            ["number", "=", id],
-            ["day", "=", day]
-        ]).groupBy("day").getQuery()
+        # the keys to fetch
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+
+        query = self.QueryBuilder().select(keys, "dynamic").where([
+            ["number", "=", id], ["day", "=", "day"]
+        ]).getQuery()
 
         c = self.conn.cursor()
-        print(query)
+
         c.execute(query["sql"], query["values"])
         items = c.fetchall()
 
-        # data = [
-        #     {
-        #         station_id:
-        #     }
-        # ]
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
             
     
     def __ct__(self, log_time):
