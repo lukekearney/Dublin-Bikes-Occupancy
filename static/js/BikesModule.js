@@ -7,7 +7,7 @@ var BikesModule = (function(){
         getStationHistoricalInformation: function(number, day = null){
         	var request = window.superagent;	
         	var url = "http://localhost:5000/api/station/" + number;
-        	if (day){
+        	if (day != null){
         		url += "/" + day;
         	}
 
@@ -17,7 +17,7 @@ var BikesModule = (function(){
 				// need to do more error handling here.
 				if (!err){
 					var data = JSON.parse(response.text);
-					//console.log(data);
+					console.log(data);
 					// return the station data
 				}
 			});
