@@ -9,6 +9,70 @@ class dbQueries:
     def __init__(self, database_name):
         '''Connect to database[1]'''
         self.conn = sqlite3.connect(database_name)
+
+    def label_results(self, keys, results):
+        '''
+        Parameter(s): a list of keys and a list of results
+        Returns: a dictionary labelled with the appropriate keys and values
+        '''
+        returned_results = {}
+
+
+        for index, item in enumerate(results):
+            returned_results[keys[index]] = item
+
+        return returned_results
+
+
+    class QueryBuilder:
+        def __init__(self):
+            self.query = "";
+            self.values = []
+
+        def select(self, fields, table):
+            '''
+            Parameter(s): a list of fields and a table in the database
+            Returns: the current object with the query built up
+            '''
+            query = "SELECT "
+            for index, field in enumerate(fields):
+                query += field
+                if index < len(fields) - 1:
+                    query += ","
+
+            self.query = query + " FROM " + table
+
+            return self
+
+        def where(self, parameters):
+            '''
+            Parameter(s): a list of fields and a table in the database. Parameters in formation [field, action, value]
+            Returns: the current object with the query built up
+            '''
+            query = ""
+            for index, param in enumerate(parameters):
+                query += param[0] + " " + param[1] + "?"
+                self.values.append(param[2])
+
+                if index < len(parameters) - 1:
+                    query += " AND "
+
+            self.query += " WHERE " + query
+            return self
+
+        def groupBy(self, field):
+            self.query += " GROUP BY " + field
+            return self
+
+        def getQuery(self):
+            return {
+                "sql" : self.query,
+                "values" : self.values
+            }
+
+
+
+
         
     def station_to_ID(self, name):
         '''
@@ -16,7 +80,7 @@ class dbQueries:
         Returns: Number of station based on the name of the station.
         '''
         # If name is entered in lowercase or otherwise it will be converted to uppercase. 
-        name.upper
+        name = name.upper()
         # Retrieves number of station based on the name of the station [2].
         query = self.conn.execute('SELECT number FROM static WHERE name = :name', {'name':name})
         for row in query:
@@ -141,6 +205,52 @@ class dbQueries:
                 return False
             else:
                 return True
+
+    def get_historical_info_by_id(self, id):
+        '''
+        Parameter(s): ID of station (id or list).
+        Returns: an array of dictionaries containing occupancy data, day, hour and minute
+        '''
+        # the keys to fetch
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+
+        query = self.QueryBuilder().select(keys, "dynamic").where([
+            ["number", "=", id]
+        ]).getQuery()
+
+        c = self.conn.cursor()
+
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
+
+
+    def get_historical_info_by_id_and_day(self, id, day):
+        '''
+        Parameter(s): ID of station (id or list).
+        Returns: an array of dictionaries containing occupancy data, day, hour and minute
+        '''
+        query = self.QueryBuilder().select(
+            ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"],
+            "dynamic").where([
+            ["number", "=", id],
+            ["day", "=", day]
+        ]).groupBy("day").getQuery()
+
+        c = self.conn.cursor()
+        print(query)
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # data = [
+        #     {
+        #         station_id:
+        #     }
+        # ]
             
     
     def __ct__(self, log_time):
@@ -219,5 +329,6 @@ if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
     print(db.latest_time_logged(10))
     print(db.num_unique_days())
+    print(db.get_historical_info_by_id(12))
     # db.add_time_to_db()
 

@@ -56,6 +56,24 @@ def static_api():
     conn.close()
     return json.dumps(data)
 
+@application.route('/api/station/id')
+def historical_data (id):
+    """
+    gets historical data for a station by id. Used by the client side
+    """
+    # get all station information by id.
+
+
+    pass
+
+
+@application.route('/station/address')
+def station (address):
+    """
+    Gets station information based on the address and loads the appropriate static template
+    """
+    pass
+
 @application.route('/about')
 def about():
     data = [
