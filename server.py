@@ -2,7 +2,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 
 import sqlite3, os, json
-import src
+from src import dbQueries as db
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -56,15 +56,23 @@ def static_api():
     conn.close()
     return json.dumps(data)
 
-@application.route('/api/station/id')
-def historical_data (id):
+@application.route('/api/station/<id>')
+@application.route('/api/station/<id>/<day>')
+def historical_data (id, day = None):
     """
     gets historical data for a station by id. Used by the client side
     """
     # get all station information by id.
+    database = db.dbQueries("bikes.db")
+    if day:
+        info = database.get_historical_info_by_id_and_day(id, day)
+    else:
+        info = database.get_historical_info_by_id(id)
 
+    # states that database usage is finished
+    database.close_connection()
 
-    pass
+    return json.dumps(info)
 
 
 @application.route('/station/address')

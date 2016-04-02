@@ -238,7 +238,7 @@ class dbQueries:
         keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
 
         query = self.QueryBuilder().select(keys, "dynamic").where([
-            ["number", "=", id], ["day", "=", "day"]
+            ["number", "=", id], ["day", "=", day]
         ]).getQuery()
 
         c = self.conn.cursor()
@@ -323,6 +323,13 @@ class dbQueries:
 
             self.conn.execute(query)
             self.conn.commit()
+
+    def close_connection(self):
+        '''
+        Parameter(s): None
+        Returns: None. Closes the database connection for thread safe usage
+        '''
+        self.conn.close()
         
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
