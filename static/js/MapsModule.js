@@ -1,17 +1,16 @@
 // set up IIFE, only exposing the parts we want to be globally accessible
-(function(global){
-	// set up maps module
-	var MapsModule = (function(){
-		// allow referencing of the entire maps module
-		var self = this;
+// set up maps module
+var MapsModule = (function(){
+	// allow referencing of the entire maps module
+	var self = this;
 
-		// private object property, available to the MapsModule
-		var settings = {
-			"map": document.getElementById("map"),
-			"markers": []
-		}
-	
-		// private method
+	// private object property, available to the MapsModule
+	var settings = {
+		"map": null,
+		"markers": []
+	}
+
+	// private method
 	function setUpMap(){
 		
 		var map;
@@ -36,14 +35,22 @@
 			if (!err){
 				var data = JSON.parse(response.text);
 				for (var i = 0; i < data.length; i++){
+					console.log(data[i]);
 					var marker = new google.maps.Marker({
 						position: {
 							"lat": data[i].position.lat,
 							"lng": data[i].position.lang
 						},
 						map: settings.mapObj,
-						title: data[i].name
+						title: data[i].name,
+						number: data[i].number
 					});
+
+					marker.addListener("click", function(){
+						// fetches data based on the marker's number
+						BikesModule.getStationHistoricalInformation(this.number, 0)
+					});
+
 					settings.markers.push(marker)
 				}
 			}
@@ -84,7 +91,8 @@
 
 	// public exposed properties
 	return {
-		init: function(phrase){
+		init: function(element){
+			settings.map = element;
 			// set up the map
 			setUpMap();
 
@@ -106,9 +114,3 @@
 		}
 	}
 }())
-
-	// initialise the application
-	global.initialise = function(){
-		MapsModule.init();
-	}
-}(window));
