@@ -56,8 +56,8 @@ def static_api():
     conn.close()
     return json.dumps(data)
 
-@application.route('/api/station/<id>')
-@application.route('/api/station/<id>/<day>')
+@application.route('/api/station/<int:id>')
+@application.route('/api/station/<int:id>/<int:day>')
 def historical_data (id, day = None):
     """
     gets historical data for a station by id. Used by the client side

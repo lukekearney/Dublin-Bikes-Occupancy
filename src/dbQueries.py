@@ -44,6 +44,47 @@ class dbQueries:
 
             return self
 
+        def insert(self, fields, values, table):
+            query = "INSERT INTO " + table
+            field_string = ""
+            value_string = ""
+            if fields:
+                field_string += " ("
+                for index, field in enumerate(fields):
+                    field_string += field
+                    if index < len(fields) - 1:
+                        field_string += ","
+
+                field_string += ")"
+
+            query += field_string + " VALUES "
+
+
+            if type(values[0]) is list or type(values[0]) is tuple:
+                # has multiple rows to
+
+                for index, value in enumerate(values):
+                    for val in value:
+                        self.values.append(val)
+
+                    value_string += "(" + ",".join("?" for x in value) + ")"
+                    if index < len(values) - 1:
+                        value_string += ","
+
+            else:
+                # has only 1 value to insert
+                values = [val for val in values]
+                value_string += "(" + ",".join("?" for x in values) + ")"
+
+            # set the value of the query
+            self.query = query + value_string
+
+            return self
+
+
+
+
+
         def where(self, parameters):
             '''
             Parameter(s): a list of fields and a table in the database. Parameters in formation [field, action, value]
@@ -336,5 +377,6 @@ if(__name__ == "__main__"):
     print(db.latest_time_logged(10))
     print(db.num_unique_days())
     print(db.get_historical_info_by_id(12))
+    print(db.QueryBuilder().insert(["id", "name"], [(1, "bob"), (2, "hello")], "users").getQuery())
     # db.add_time_to_db()
 
