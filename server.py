@@ -85,12 +85,14 @@ def historical_data (id, day = None):
     return json.dumps(info)
 
 
-@application.route('/station/address')
+
+@application.route('api/station-info/<address>')
 def station (address):
     """
     Gets station information based on the address and loads the appropriate static template
     """
-    pass
+
+    return json.dumps(info)
 
 @application.route('/about')
 def about():

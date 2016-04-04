@@ -12,6 +12,7 @@
     <script src="static/js/BikesModule.js"></script>
     <script src="static/js/MapsModule.js"></script>
     <script src="static/js/PageModule.js"></script>
+    <script src="static/js/templates.js"></script>
 </head>
 <body>
     {% for d in mData %}
@@ -19,7 +20,7 @@
     {% endfor %}
 
     <script>
-    PageModule.gotoPage("/station/10");
+    PageModule.gotoPage("/station/my-station", 10);
     PageModule.gotoPage("/station/10/");
     PageModule.gotoPage("station/10");
     </script>
