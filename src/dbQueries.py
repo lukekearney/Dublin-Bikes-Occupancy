@@ -1,26 +1,78 @@
-# References:
-#[1] "11.13. Sqlite3 — DB-API 2.0 Interface For Sqlite Databases — Python 2.7.11 Documentation". 
-#     Docs.python.org, available: https://docs.python.org/2/library/sqlite3.html [Accessed: 25/03/16]
-
-#[2] "Sqlite3 – Embedded Relational Database - Python Module Of The Week". Pymotw.com,
-#     available: https://pymotw.com/2/sqlite3/ [Accessed: 25/03/16]
-
-#[3] "15.3. Time — Time Access And Conversions — Python 2.7.11 Documentation". Docs.python.org, 
-#     available: https://docs.python.org/2/library/time.html [Accessed: 25/03/16]
-   
-#[4] "SQL COUNT() Function". W3schools.com, 
-#     available: http://www.w3schools.com/sql/sql_func_count.asp [Accessed: 25/03/16]
-
 __author__ = "Ellen Rushe"
 
 import sqlite3
 import time
+import datetime
 
 class dbQueries:
     
     def __init__(self, database_name):
         '''Connect to database[1]'''
         self.conn = sqlite3.connect(database_name)
+
+    def label_results(self, keys, results):
+        '''
+        Parameter(s): a list of keys and a list of results
+        Returns: a dictionary labelled with the appropriate keys and values
+        '''
+        returned_results = {}
+
+
+        for index, item in enumerate(results):
+            returned_results[keys[index]] = item
+
+        return returned_results
+
+
+    class QueryBuilder:
+        def __init__(self):
+            self.query = "";
+            self.values = []
+
+        def select(self, fields, table):
+            '''
+            Parameter(s): a list of fields and a table in the database
+            Returns: the current object with the query built up
+            '''
+            query = "SELECT "
+            for index, field in enumerate(fields):
+                query += field
+                if index < len(fields) - 1:
+                    query += ","
+
+            self.query = query + " FROM " + table
+
+            return self
+
+        def where(self, parameters):
+            '''
+            Parameter(s): a list of fields and a table in the database. Parameters in formation [field, action, value]
+            Returns: the current object with the query built up
+            '''
+            query = ""
+            for index, param in enumerate(parameters):
+                query += param[0] + " " + param[1] + "?"
+                self.values.append(param[2])
+
+                if index < len(parameters) - 1:
+                    query += " AND "
+
+            self.query += " WHERE " + query
+            return self
+
+        def groupBy(self, field):
+            self.query += " GROUP BY " + field
+            return self
+
+        def getQuery(self):
+            return {
+                "sql" : self.query,
+                "values" : self.values
+            }
+
+
+
+
         
     def station_to_ID(self, name):
         '''
@@ -28,7 +80,7 @@ class dbQueries:
         Returns: Number of station based on the name of the station.
         '''
         # If name is entered in lowercase or otherwise it will be converted to uppercase. 
-        name.upper
+        name = name.upper()
         # Retrieves number of station based on the name of the station [2].
         query = self.conn.execute('SELECT number FROM static WHERE name = :name', {'name':name})
         for row in query:
@@ -153,17 +205,136 @@ class dbQueries:
                 return False
             else:
                 return True
+
+    def get_historical_info_by_id(self, id):
+        '''
+        Parameter(s): ID of station (id or list).
+        Returns: an array of dictionaries containing occupancy data, day, hour and minute
+        '''
+        # the keys to fetch
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+
+        query = self.QueryBuilder().select(keys, "dynamic").where([
+            ["number", "=", id]
+        ]).getQuery()
+
+        c = self.conn.cursor()
+
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
+
+
+    def get_historical_info_by_id_and_day(self, id, day):
+        '''
+        Parameter(s): ID of station (id or list).
+        Returns: an array of dictionaries containing occupancy data, day, hour and minute
+        '''
+        # the keys to fetch
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+
+        query = self.QueryBuilder().select(keys, "dynamic").where([
+            ["number", "=", id], ["day", "=", day]
+        ]).getQuery()
+
+        c = self.conn.cursor()
+
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
             
     
     def __ct__(self, log_time):
-        print(datetime.datetime.fromtimestamp(int(log_time)).strftime('%Y-%m-%d %H:%M:%S'))
+        return datetime.datetime.fromtimestamp(int(log_time)).strftime('%Y-%m-%d %H:%M:%S')
         # http://stackoverflow.com/questions/3682748/converting-unix-timestamp-string-to-readable-date-in-python
-
+ 
     def convert_time(self):
-        conn = sqlite3.connect('bikes.db')
-        c = conn.cursor()
-        c.execute("SELECT logged FROM dynamic;")
+        c = self.conn.cursor()
+        c.execute("SELECT logged FROM dynamic")
         result = c.fetchall()
+        times = []
         for i in range(len(result)):
-            self.__ct__(result[i][0])
+            times.append(self.__ct__(result[i][0]))
+        return times
+
+    def get_day_and_time(self, timestamp):
+        m_date = datetime.datetime.fromtimestamp(timestamp)
+        # this will get the week day from the date object
+        # note these are integer indexes. Monday is 0, Tues is 1, Wed 2 etc
+        day = m_date.weekday()
+
+        hour = m_date.hour
+        minute = m_date.minute
+        # normalisation code if needed. I checked. Doesn't seem to be a problem
+        # if 0 <= m_date.minute < 10:
+        #     # its around the hour (00) mark
+        #     minute = 0
+        # elif 15 <= m_date.minute < 25:
+        #     minute = 15
+        # elif 30 <= m_date.minute < 40:
+        #     minute = 30
+        # else:
+        #     minute = 45
+
+        return (day, hour, minute)
+
+    def num_unique_days(self):
+        c = self.conn.cursor()
+        query = c.execute("SELECT distinct day FROM dynamic")
+        items = c.fetchall()
+        return items
+
+
+    def add_time_to_db(self):
+        c = self.conn.cursor()
+        # this isn't necessary once the database is updated
+        # c.execute("ALTER TABLE dynamic ADD COLUMN 'date_time' 'String' ")
+        #
+        # @Luke the problem is somewhere here. times should be a list of string containing dtea/time
+        # the list comprehension wraps every string in a tuple to allow the sqlite function to work
+        # not getting any errors, just running infinitely for me.
+        # also once you run this once, you'll get an error about the column date_time already existing (see above as to why this was happening)
+
+        # this query will fetch unique rows. No station of a certain number will be logged at the same time as other stations of the same number
+        query = c.execute("SELECT logged, number FROM dynamic")
+        items = c.fetchall()
+        #print(items)
+        for item in items:
+            info = self.get_day_and_time(item[0])
+
+            # print((info[0], info[1], info[2], item[1], item[0]))
+            # print(info)
+            # print(item)
+            # self.conn.execute("UPDATE dynamic SET day = " + str(info[0]) + ", hour = " + str(info[1]) + ", minute = " + str(info[2]) + "WHERE")
+            query = "UPDATE dynamic SET day = " + str(info[0]) + \
+            ", hour = " + str(info[1]) + \
+            ", minute = " + str(info[2]) + \
+            " WHERE number = " + str(item[1]) + \
+            " AND logged = " + str(item[0])
+            #print(query)
+
+            self.conn.execute(query)
+            self.conn.commit()
+
+    def close_connection(self):
+        '''
+        Parameter(s): None
+        Returns: None. Closes the database connection for thread safe usage
+        '''
+        self.conn.close()
+        
+if(__name__ == "__main__"):
+    db = dbQueries("../bikes.db")
+    print(db.latest_time_logged(10))
+    print(db.num_unique_days())
+    print(db.get_historical_info_by_id(12))
+    # db.add_time_to_db()
 
