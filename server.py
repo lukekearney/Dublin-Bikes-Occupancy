@@ -2,7 +2,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template, flash
 
 import sqlite3, os, json
-from src import dbQueries as db
+from src.dbQueries import dbQueries
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -11,19 +11,20 @@ conn = sqlite3.connect(path + "/bikes.db")
 application = Flask(__name__)
 
 
-
 @application.route("/")
 def hello():
     return render_template("home.html")
 
-# Add whatever api route you want here
 @application.route('/api')
 def api():
-#     racknum = request.args.get('racknum')
-#     return racknum
+    return "usage: api/rack?racknum = YOUR_NUM"
 
+@application.route('/api/rack')   
+def rack():
+#     db has to be inside function otherwise error about db being created in anohter thread
+    db = dbQueries("bikes.db")  
     racknum = request.args.get('racknum')
-    max_racknum = 10
+    max_racknum = db.num_bike_stations()
     if int(racknum) > max_racknum:
         # http://flask.pocoo.org/docs/0.10/patterns/errorpages/
         return render_template('404.html'), 404
@@ -63,7 +64,7 @@ def historical_data (id, day = None):
     gets historical data for a station by id. Used by the client side
     """
     # get all station information by id.
-    database = db.dbQueries("bikes.db")
+    database = dbQueries("bikes.db")
     if day:
         info = database.get_historical_info_by_id_and_day(id, day)
     else:
