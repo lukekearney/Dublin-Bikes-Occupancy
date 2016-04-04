@@ -2,11 +2,26 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Hello</title>
+    <link rel="stylesheet" href="static/style.css"/>
+    <link rel="stylesheet" href="static/normalise.css"/>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise"
+  type="text/javascript"></script>
+    <script src="static/superagent/superagent.js"></script>
+    <script src="static/js/handlebars/dist/handlebars.runtime.js"></script>
+    <script src="static/js/BikesModule.js"></script>
+    <script src="static/js/MapsModule.js"></script>
+    <script src="static/js/PageModule.js"></script>
 </head>
 <body>
     {% for d in mData %}
     <div data-id="{{d.id}}">{{ d.name }}</div>
     {% endfor %}
+
+    <script>
+    PageModule.gotoPage("/station/10");
+    PageModule.gotoPage("/station/10/");
+    PageModule.gotoPage("station/10");
+    </script>
 </body>
 </html>

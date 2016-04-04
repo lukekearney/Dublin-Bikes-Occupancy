@@ -6,9 +6,14 @@ var PageModule = (function(){
 
 	}
 
+	var routes = {
+		"station" : /\/?station\/\d+\/?/
+	}
+
 	function renderPage(template, data){
 		var template = Handlebars.templates[template];
 		var html = template(data);
+
 		document.innerHTML = html;
 	}
 
@@ -23,10 +28,15 @@ var PageModule = (function(){
 			getMapData(function(resp){
 				console.log(resp);
 			});
-		}
+		},
 
 		gotoPage: function(url){
-			
+			for (var route in routes){
+				var re = new RegExp(route, "i", "g");
+				if (url.match(re)){
+					console.log(url + ": Its a match!");
+				}
+			}
 		}
 	}
-}())
+}());
