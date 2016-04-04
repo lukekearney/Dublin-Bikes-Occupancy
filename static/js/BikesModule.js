@@ -17,7 +17,7 @@ var BikesModule = (function(){
 				// need to do more error handling here.
 				if (!err){
 					var data = JSON.parse(response.text);
-					console.log(data);
+					
 					// return the station data
 					if (callback){
 						callback(null, data);
@@ -40,7 +40,7 @@ var BikesModule = (function(){
         	var url = "http://localhost:5000/api/station-info/" + address;
         	request.get(url, function(err, response){
         		if (!err) {
-        			console.log(response.text);
+        			
         			var data = JSON.parse(response.text);
         			if (callback) {
         				callback(null, data);

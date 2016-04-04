@@ -18,6 +18,12 @@ var PageModule = (function(){
 						parts.push(urlParts[i]);
 					} 
 				}
+
+				openPages[parts.join("/")] = {
+					added: Math.floor(Date.now() / 1000 ),
+					visible: true
+				};
+				console.log(openPages);
 				// get the number for the station
 				BikesModule.getStationInfo(parts[parts.length - 1], function(err, result){
 					// get current day, normalised to Python standard
@@ -33,6 +39,11 @@ var PageModule = (function(){
 								station: station
 							});
 						}
+						// get current URL for push state
+						console.log("/" + parts.join("/"));
+						console.log(window.location.pathname);
+						history.pushState(window.location.pathname, null, parts.join("/"));
+						console.log(window.location.pathname);
 						
 					});
 				});
@@ -58,6 +69,10 @@ var PageModule = (function(){
 					routes[route].callback(url, route);
 				}
 			}
+		},
+
+		backPage: function() {
+			// toDO: Fill out history API stuff
 		}
 	}
 }());
