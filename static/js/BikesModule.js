@@ -33,10 +33,22 @@ var BikesModule = (function(){
         },
 
         getStationInfo: function(address, callback = null) {
-        	var request = window.superagent;	
-        	var url = "http://localhost:5000/api/station/" + address;
+        	var request = window.superagent;
+
+        	// ensure its the correct format
+        	address = address.replace(" ", "-");
+        	var url = "http://localhost:5000/api/station-info/" + address;
         	request.get(url, function(err, response){
-				console.log(response.text);
+        		if (!err) {
+        			console.log(response.text);
+        			var data = JSON.parse(response.text);
+        			if (callback) {
+        				callback(null, data);
+        			}
+        		} else {
+        			console.error(response.text);
+        		}
+				
 			});
         }
 

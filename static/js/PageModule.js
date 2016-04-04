@@ -9,13 +9,13 @@ var PageModule = (function(){
 	var routes = {
 		"station" : {
 			"pattern": /\/?station\/\d+\/?/,
-			callback: function(url){
+			callback: function(url, route){
 				// request information on that station
 				var parts = [];
 				for (var i = 0, urlParts = url.split("/"); i < urlParts.length; i++){
 					// check not an empty string
 					if (urlParts[i].length > 0) {
-						parts.append(urlParts[i]);
+						parts.push(urlParts[i]);
 					} 
 				}
 				// get the number for the station
@@ -24,11 +24,13 @@ var PageModule = (function(){
 					var day = (new Date().getDay() + 6) % 7;
 
 					// get data by the number
-					var data = BikesModule.getStationHistoricalInformation(number, day, function(err, data) {
+					var station = result[0];
+					var data = BikesModule.getStationHistoricalInformation(station.number, day, function(err, data) {
 						// uses error-first callback
 						if (!err) {
 							renderPage(route, {
 								daily: data,
+								station: station
 							});
 						}
 						
@@ -43,17 +45,17 @@ var PageModule = (function(){
 		var template = Handlebars.templates[template];
 		var html = template(data);
 
-		document.innerHTML = html;
+		document.write(html);
 	}
 
 	// public exposed properties
 	return {
-		gotoStation: function(url, number = null){
+		gotoStation: function(url){
 			for (var route in routes){
-				var re = new RegExp(route, "i", "g");
+				var re = new RegExp(route.pattern, "i", "g");
 				if (url.match(re)){
 					// fetch data for that station
-					
+					routes[route].callback(url, route);
 				}
 			}
 		}

@@ -20,9 +20,11 @@
     {% endfor %}
 
     <script>
-    PageModule.gotoPage("/station/my-station", 10);
-    PageModule.gotoPage("/station/10/");
-    PageModule.gotoPage("station/10");
+    // PageModule.gotoPage("/station/my-station", 10);
+    // PageModule.gotoPage("/station/10/");
+    // PageModule.gotoPage("station/10");
+    BikesModule.getStationInfo("north-circular-road");
+    PageModule.gotoStation("/station/north-circular-road");
     </script>
 </body>
 </html>
