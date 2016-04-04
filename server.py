@@ -17,17 +17,19 @@ def hello():
 
 @application.route('/api')
 def api():
-    return "usage: api/rack?racknum = YOUR_NUM"
+    return "usage:<br> api/station/STATION_ID/DAY\
+    <br>api/static"
 
-@application.route('/api/rack')   
-def rack():
 #     db has to be inside function otherwise error about db being created in anohter thread
     db = dbQueries("bikes.db")  
     racknum = request.args.get('racknum')
     max_racknum = db.num_bike_stations()
     if int(racknum) > max_racknum:
         # http://flask.pocoo.org/docs/0.10/patterns/errorpages/
-        return render_template('404.html'), 404
+#         return render_template('test.html', mData = data)
+        error = "station number out of range. Max is " + (str)(max_racknum) 
+        return render_template('404.html', mdata = error), 404
+#         return render_template('404.html'), 404
     else:
         return racknum
 
@@ -64,14 +66,21 @@ def historical_data (id, day = None):
     gets historical data for a station by id. Used by the client side
     """
     # get all station information by id.
-    database = dbQueries("bikes.db")
+    db = dbQueries("bikes.db")
+    max_station = db.num_bike_stations()
+    
     if day:
-        info = database.get_historical_info_by_id_and_day(id, day)
+        if 0 < (int)(id) <= max_station and 0 <= (int)(day) <=6:
+            info = db.get_historical_info_by_id_and_day(id, day)  
+        else: 
+            error = "Station must be between 1 and " + (str)(max_station) +". Day must be between 0 and 6"
+            return render_template('404.html', mdata = error), 404  
     else:
-        info = database.get_historical_info_by_id(id)
-
-    # states that database usage is finished
-    database.close_connection()
+        if 0 < (int)(id) <= max_station:
+            info = db.get_historical_info_by_id(id)
+        else:
+            error = "Station must be between 0 and " + (str)(max_station)
+            return render_template('404.html', mdata = error), 404  
 
     return json.dumps(info)
 
