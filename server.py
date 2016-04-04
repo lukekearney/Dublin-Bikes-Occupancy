@@ -3,6 +3,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 
 import sqlite3, os, json
 from src.dbQueries import dbQueries
+from src import helpers
 
 path = os.path.dirname(os.path.realpath(__file__))
 
@@ -86,11 +87,19 @@ def historical_data (id, day = None):
 
 
 
-@application.route('api/station-info/<address>')
-def station (address):
+@application.route('/api/station-info/<name>')
+def station (name):
     """
     Gets station information based on the address and loads the appropriate static template
     """
+    db = dbQueries("bikes.db")
+    # convert name to address
+    name = helpers.url_to_name(name)
+    info = db.static_info_by_name(name)
+
+    if (len(info) == 0):
+        error = "That station does not appear to exist"
+        return render_template('404.html', mdata=error), 404
 
     return json.dumps(info)
 

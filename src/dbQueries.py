@@ -165,7 +165,26 @@ class dbQueries:
         # Retrieves co-ordinates of station based on the number (i.e. the ID) of the station [2].
         query = self.conn.execute('SELECT position_long, position_lat FROM static WHERE number = :number', {'number':number})
         for row in query:
-            return row  
+            return row
+
+    def static_info_by_name (self, name):
+        name = name.upper()
+        keys = ["number", "name", "address"]
+        query = self.QueryBuilder().select(keys, "static").where([
+            ["name", "=", name]
+        ]).getQuery()
+        print(query)
+        c = self.conn.cursor()
+
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
+
+
 
     def available_bike_stands(self, number, time):
         '''
