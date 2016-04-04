@@ -17,7 +17,7 @@ var BikesModule = (function(){
 				// need to do more error handling here.
 				if (!err){
 					var data = JSON.parse(response.text);
-					
+					console.log(data);
 					// return the station data
 					if (callback){
 						callback(null, data);
@@ -27,9 +27,14 @@ var BikesModule = (function(){
 				} else {
 					if (callback) {
 						callback (err, response.text);
+						return response.text;
 					}
+
 				}
+
+				callback(null, []);
 			});
+			
         },
 
         getStationInfo: function(address, callback = null) {

@@ -18,13 +18,30 @@
     {% for d in mData %}
     <div data-id="{{d.id}}">{{ d.name }}</div>
     {% endfor %}
+    <div id = "wrapper">
+		<button id = "btn">Click me</button>
+   	</div>
 
     <script>
     // PageModule.gotoPage("/station/my-station", 10);
     // PageModule.gotoPage("/station/10/");
     // PageModule.gotoPage("station/10");
-    BikesModule.getStationInfo("north-circular-road");
-    PageModule.gotoStation("/station/north-circular-road");
+    window.addEventListener('popstate', function(e) {
+    	var state = PageModule.getState();
+    	if (state) {
+    		PageModule.gotoPage(state);
+    		PageModule.setState(history.state);
+    	}
+	    
+	});
+
+	document.getElementById("btn").addEventListener("click", function(e){
+		console.log(e);
+    	PageModule.gotoPage("/station/north-circular-road");
+	});
+
+	history.pushState(null, null, window.location.pathname);
+    
     </script>
 </body>
 </html>
