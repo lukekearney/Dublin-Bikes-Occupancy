@@ -95,9 +95,13 @@ def to_static_template(location):
     name = location
     id = station_to_ID(name)
     address = station_address_by_ID(id)
+    position = station_coordinates_by_ID(id)
     available_bikes = available_bike_stands(id, time)
     available_bike_stands = available_bike_stands(id, time)
-    banking = take_credit(id)
+    take_credit = take_credit(id)
+    
+    return render_template('static-template.html', name = tempName, address = tempAddress, 
+    position = tempPosition, available_bikes = availableBikes, available_bike_stands = availableBikeStands)
     
 @application.route('/station/address')
 def station (address):
@@ -106,7 +110,7 @@ def station (address):
 
 @application.route('/api/station-info/<name>')
 def station (name):
->>>>>>> b878e66879bcefc25715107f430d2d14625db24d
+
     """
     Gets station information based on the address and loads the appropriate static template
     """
