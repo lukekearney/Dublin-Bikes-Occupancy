@@ -101,6 +101,7 @@ def real_time():
     # fetch all data to send back
     real_time = db.get_real_time()
 
+    db.close_connection()
     # send results back
     return json.dumps(real_time)
 

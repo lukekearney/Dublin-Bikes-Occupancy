@@ -27,7 +27,7 @@ var MapsModule = (function(){
 
 	function getMapData(callback){
 		var request = window.superagent;
-		var url = "http://localhost:5000/api/static";
+		var url = "http://localhost:5000/api/real-time";
 		request.get(url, function(err, response){
 			// console.log('Response ok:', response.ok);
 			// console.log('Response text:', response.text);
@@ -38,8 +38,8 @@ var MapsModule = (function(){
 					console.log(data[i]);
 					var marker = new google.maps.Marker({
 						position: {
-							"lat": data[i].position.lat,
-							"lng": data[i].position.lang
+							"lat": data[i].lat,
+							"lng": data[i].long
 						},
 						map: settings.mapObj,
 						title: data[i].name,
@@ -48,7 +48,12 @@ var MapsModule = (function(){
 
 					marker.addListener("click", function(){
 						// fetches data based on the marker's number
-						BikesModule.getStationHistoricalInformation(this.number, 0)
+						BikesModule.getStationHistoricalInformation(this.number, 0);
+						//PageModule.gotoPage("station/" + this.title.replace(" ", "-").toLowerCase());
+						var title = this.title.replace(/\(\w+\)/g, "");
+						title = this.title.replace(/ /g, "-");
+						window.location.href = "station/" + title.toLowerCase();
+						
 					});
 
 					settings.markers.push(marker)

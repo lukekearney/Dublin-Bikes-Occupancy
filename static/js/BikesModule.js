@@ -11,7 +11,7 @@ var BikesModule = (function(){
         	if (day != null){
         		url += "/" + day;
         	}
-        	console.log(url);
+        	
 
             request.get(url, function(err, response){
 				// console.log('Response ok:', response.ok);

@@ -65,9 +65,10 @@ var PageModule = (function(){
 			}
 		},
 		"home": {
-			"pattern": /\/[\w]+/,
+			"pattern": /\/[\w]*/,
 			callback: function(url, route){
 				// load the home template
+				console.log(route);
 				renderPage(route, {
 					
 				});
@@ -77,13 +78,15 @@ var PageModule = (function(){
 				});
 				addNewPage(node, html);
 				PageModule.setState(history.state);
+				MapsModule.init(document.getElementById("map"));
 			}
 		}
 	}
 
 	function addNewPage(node, html){
 		node.innerHTML = html
-		document.getElementById("wrapper").appendChild(node);
+		//document.getElementById("wrapper").appendChild(node);
+		document.getElementById("wrapper").innerHTML = html;
 	}
 
 	function createNewPageNode(data){
@@ -110,7 +113,7 @@ var PageModule = (function(){
 			for (var route in routes){
 				
 				var re = new RegExp(routes[route].pattern, "i");
-				
+				console.log(re.test(url));
 				if (re.test(url)){
 					console.log("my route is " + route);
 					// fetch data for that station

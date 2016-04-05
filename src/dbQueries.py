@@ -488,8 +488,8 @@ class dbQueries:
     def get_real_time(self, number = None):
         # check if data is valid
         c = self.conn.cursor()
-        label_keys = ["number", "name", "available_bike_stands", "bike_stands", "available_bikes", "status"]
-        keys = ["real_time.number", "name", "available_bike_stands", "real_time.bike_stands", "available_bikes", "status"]
+        label_keys = ["number", "name", "available_bike_stands", "bike_stands", "available_bikes", "status", "lat", "long"]
+        keys = ["real_time.number", "name", "available_bike_stands", "real_time.bike_stands", "available_bikes", "status", "position_lat", "position_long"]
         if number is None:
             # get all
             query = self.QueryBuilder().select(keys, "real_time")\
