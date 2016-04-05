@@ -35,7 +35,7 @@ var MapsModule = (function(){
 			if (!err){
 				var data = JSON.parse(response.text);
 				for (var i = 0; i < data.length; i++){
-					console.log(data[i]);
+					
 					var marker = new google.maps.Marker({
 						position: {
 							"lat": data[i].lat,
@@ -49,10 +49,12 @@ var MapsModule = (function(){
 					marker.addListener("click", function(){
 						// fetches data based on the marker's number
 						BikesModule.getStationHistoricalInformation(this.number, 0);
-						//PageModule.gotoPage("station/" + this.title.replace(" ", "-").toLowerCase());
 						var title = this.title.replace(/\(\w+\)/g, "");
 						title = this.title.replace(/ /g, "-");
-						window.location.href = "station/" + title.toLowerCase();
+
+						PageModule.gotoPage("station/" + title.toLowerCase());
+						
+						//window.location.href = "station/" + title.toLowerCase();
 						
 					});
 

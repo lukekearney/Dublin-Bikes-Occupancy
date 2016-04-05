@@ -41,14 +41,15 @@ var BikesModule = (function(){
 
         getStationInfo: function(address, callback = null) {
         	var request = window.superagent;
-
+        	address = address.replace(/ /g, "-");
         	// ensure its the correct format
-        	address = address.replace(" ", "-");
         	var url = "http://localhost:5000/api/station-info/" + address;
+        	
         	request.get(url, function(err, response){
         		if (!err) {
         			
         			var data = JSON.parse(response.text);
+        			console.log(data);
         			if (callback) {
         				callback(null, data);
         			}
