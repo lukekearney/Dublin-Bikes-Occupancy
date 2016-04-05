@@ -48,25 +48,25 @@ describe("Fetch Station historical data", function() {
 	});
 });
 
-// describe("Fetch Station historical data by number only", function() {
-// 	var res;
-// 	var valid = true;
-// 	beforeEach(function(done) {
-// 	   BikesModule.getStationHistoricalInformation(49, null, function(err, result) {
-// 	   	res = result;
-// 	   	for (var i = 0; i < result.length; i++) {
-// 	   		if (result[i].day > 6 || result[i].day < 0 || result[i].number != 49) {
-// 	   			valid = false;
-// 	   		}
-// 	   	}
-// 	   	done();
-// 	   })
-// 	  });
+describe("Fetch Station historical data by number only", function() {
+	var res;
+	var valid = true;
+	beforeEach(function(done) {
+	   BikesModule.getStationHistoricalInformation(49, null, function(err, result) {
+	   	res = result;
+	   	for (var i = 0; i < result.length; i++) {
+	   		if (result[i].day > 6 || result[i].day < 0 || result[i].number != 49) {
+	   			valid = false;
+	   		}
+	   	}
+	   	done();
+	   })
+	  });
 	
 
-//     it("should fetch an array of objects giving occupancy data for the given station", function(done) {
-// 	    expect(valid).toBeTruthy();
-// 	    done();
+    it("should fetch an array of objects giving occupancy data for the given station", function(done) {
+	    expect(valid).toBeTruthy();
+	    done();
 	    
-// 	});
-// });
+	});
+});
