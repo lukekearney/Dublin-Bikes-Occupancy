@@ -1,5 +1,5 @@
 from flask import Flask, request, session, g, redirect, url_for, \
-     abort, render_template, flash
+    abort, render_template, flash
 
 import sqlite3, os, json
 from src.dbQueries import dbQueries
@@ -16,23 +16,25 @@ application = Flask(__name__)
 def hello():
     return render_template("home.html")
 
+
 @application.route('/api')
 def api():
     return "usage:<br> api/station/STATION_ID/DAY\
     <br>api/static"
 
-#     db has to be inside function otherwise error about db being created in anohter thread
-    db = dbQueries("bikes.db")  
+    #     db has to be inside function otherwise error about db being created in anohter thread
+    db = dbQueries("bikes.db")
     racknum = request.args.get('racknum')
     max_racknum = db.num_bike_stations()
     if int(racknum) > max_racknum:
         # http://flask.pocoo.org/docs/0.10/patterns/errorpages/
-#         return render_template('test.html', mData = data)
-        error = "station number out of range. Max is " + (str)(max_racknum) 
-        return render_template('404.html', mdata = error), 404
-#         return render_template('404.html'), 404
+        #         return render_template('test.html', mData = data)
+        error = "station number out of range. Max is " + (str)(max_racknum)
+        return render_template('404.html', mdata=error), 404
+    #         return render_template('404.html'), 404
     else:
         return racknum
+
 
 # Just adding a route to pull down static data. This can be adjusted later
 @application.route('/api/static')
@@ -60,30 +62,71 @@ def static_api():
     conn.close()
     return json.dumps(data)
 
+
 @application.route('/api/station/<int:id>')
 @application.route('/api/station/<int:id>/<int:day>')
-def historical_data (id, day = None):
+def historical_data(id, day=None):
     """
     gets historical data for a station by id. Used by the client side
     """
     # get all station information by id.
     db = dbQueries("bikes.db")
     max_station = db.num_bike_stations()
-    
+
     if day is not None:
-        if 0 < (int)(id) <= max_station and 0 <= (int)(day) <=6:
-            info = db.get_historical_info_by_id_and_day(id, day)  
-        else: 
-            error = "Station must be between 1 and " + (str)(max_station) +". Day must be between 0 and 6"
-            return render_template('404.html', mdata = error), 404  
+        if 0 < (int)(id) <= max_station and 0 <= (int)(day) <= 6:
+            info = db.get_historical_info_by_id_and_day(id, day)
+        else:
+            error = "Station must be between 1 and " + (str)(max_station) + ". Day must be between 0 and 6"
+            return render_template('404.html', mdata=error), 404
     else:
         if 0 < (int)(id) <= max_station:
             info = db.get_historical_info_by_id(id)
         else:
             error = "Station must be between 0 and " + (str)(max_station)
-            return render_template('404.html', mdata = error), 404  
+            return render_template('404.html', mdata=error), 404
 
     return json.dumps(info)
+
+
+@application.route("/api/real-time")
+def real_time():
+    db = dbQueries("bikes.db")
+    count = db.get_valid_real_time_count()
+    # check if there was valid real_time data
+    if count == 0:
+        # fetch data from api
+        data = helpers.request_new_data()
+        db.insert_new_real_time_values(data)
+    # fetch all data to send back
+    real_time = db.get_real_time()
+
+    # send results back
+    return json.dumps(real_time)
+
+
+@application.route("/api/real-time/station/<id>")
+def real_time_by_station(id):
+    db = dbQueries("bikes.db")
+    count = db.get_valid_real_time_count()
+    # check if there was valid real_time data
+    if count == 0:
+        # fetch data from api
+        data = helpers.request_new_data()
+        db.insert_new_real_time_values(data, True)
+    # fetch all data to send back
+    real_time = db.get_real_time(id)
+
+    # send results back
+    return json.dumps(real_time)
+    pass
+
+
+@application.route("/database/setup")
+def setup_db():
+    db = dbQueries("bikes.db")
+    db.setup_db()
+    return "setting up database"
 
 
 @application.route('/to_static_template/<location>/<time>')
@@ -99,16 +142,14 @@ def to_static_template(location):
     available_bikes = available_bike_stands(id, time)
     available_bike_stands = available_bike_stands(id, time)
     take_credit = take_credit(id)
-    
-    return render_template('static-template.html', name = tempName, address = tempAddress, 
-    position = tempPosition, available_bikes = availableBikes, available_bike_stands = availableBikeStands)
-    
 
+    return render_template('static-template.html', name=tempName, address=tempAddress,
+                           position=tempPosition, available_bikes=availableBikes,
+                           available_bike_stands=availableBikeStands)
 
 
 @application.route('/api/station-info/<name>')
-def station (name):
-
+def station(name):
     """
     Gets station information based on the address and loads the appropriate static template
     """
@@ -122,6 +163,7 @@ def station (name):
         return render_template('404.html', mdata=error), 404
 
     return json.dumps(info)
+
 
 @application.route('/about')
 def about():
@@ -145,7 +187,8 @@ def about():
         }
     ]
 
-    return render_template('test.html', mData = data)
+    return render_template('test.html', mData=data)
+
 
 @application.route('/static/test')
 def testing():
@@ -155,5 +198,5 @@ def testing():
 if __name__ == "__main__":
     application.debug = True
     application.run(host='0.0.0.0')
-    
+
 # localhost:5000/api?racknum=1

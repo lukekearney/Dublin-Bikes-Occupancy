@@ -53,3 +53,5 @@ def test_historical_by_id_and_day():
     data = dbq.get_historical_info_by_id_and_day(10, 0)
     assert data[0]["day"] == 0 and data[0]["number"] == 10
     
+def test_real_time_fetch():
+    assert len(dbq.get_real_time()) > 1 and dbq.get_real_time(10)[0]["number"] == 10
