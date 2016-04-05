@@ -1,10 +1,3 @@
-describe("Hello world", function() {
-  it("says hello", function() {
-    expect(helloWorld()).toEqual("Hello world!");
-  });
-});
-
-
 describe("Fetch Station info", function() {
 	var res;
 	beforeEach(function(done) {
