@@ -75,7 +75,17 @@ def historical_data (id, day = None):
 
     return json.dumps(info)
 
-
+@application.route('/to_static_template/<location>')
+def to_static_template(location):
+    '''
+    Used for passing information to the static template
+    '''
+  
+    
+   
+    
+    
+    
 @application.route('/station/address')
 def station (address):
     """
