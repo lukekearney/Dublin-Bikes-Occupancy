@@ -32,9 +32,7 @@ describe("Fetch Station historical data", function() {
 	   		if (result[i].day != 0 || result[i].number != 49) {
 	   			
 	   			errors++;
-	   		} else {
-	   			console.log("this one is valid");
-	   		}
+	   		} 
 	   	}
 	   	done();
 	   })
