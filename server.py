@@ -70,7 +70,7 @@ def historical_data (id, day = None):
     db = dbQueries("bikes.db")
     max_station = db.num_bike_stations()
     
-    if day:
+    if day is not None:
         if 0 < (int)(id) <= max_station and 0 <= (int)(day) <=6:
             info = db.get_historical_info_by_id_and_day(id, day)  
         else: 
@@ -103,8 +103,6 @@ def to_static_template(location):
     return render_template('static-template.html', name = tempName, address = tempAddress, 
     position = tempPosition, available_bikes = availableBikes, available_bike_stands = availableBikeStands)
     
-@application.route('/station/address')
-def station (address):
 
 
 
@@ -148,6 +146,10 @@ def about():
     ]
 
     return render_template('test.html', mData = data)
+
+@application.route('/static/test')
+def testing():
+    return render_template('SpecRunner.html')
 
 
 if __name__ == "__main__":
