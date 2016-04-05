@@ -86,16 +86,18 @@ def historical_data (id, day = None):
     return json.dumps(info)
 
 
-@application.route('/to_static_template/<location>')
+@application.route('/to_static_template/<location>/<time>')
 def to_static_template(location):
     '''
     Used for passing information to the static template
     '''
-  
-    
-   
-    
-    
+    database = dbQueries("bikes.db")
+    name = location
+    id = station_to_ID(name)
+    address = station_address_by_ID(id)
+    available_bikes = available_bike_stands(id, time)
+    available_bike_stands = available_bike_stands(id, time)
+    banking = take_credit(id)
     
 @application.route('/station/address')
 def station (address):
