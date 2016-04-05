@@ -4,7 +4,7 @@ var BikesModule = (function(){
 	}
 
     return {
-        getStationHistoricalInformation: function(number, day = null){
+        getStationHistoricalInformation: function(number, day = null, callback = null){
         	var request = window.superagent;	
         	var url = "http://localhost:5000/api/station/" + number;
         	if (day != null){
@@ -19,7 +19,41 @@ var BikesModule = (function(){
 					var data = JSON.parse(response.text);
 					console.log(data);
 					// return the station data
+					if (callback){
+						callback(null, data);
+					}
+
+					return data;
+				} else {
+					if (callback) {
+						callback (err, response.text);
+						return response.text;
+					}
+
 				}
+
+				callback(null, []);
+			});
+			
+        },
+
+        getStationInfo: function(address, callback = null) {
+        	var request = window.superagent;
+
+        	// ensure its the correct format
+        	address = address.replace(" ", "-");
+        	var url = "http://localhost:5000/api/station-info/" + address;
+        	request.get(url, function(err, response){
+        		if (!err) {
+        			
+        			var data = JSON.parse(response.text);
+        			if (callback) {
+        				callback(null, data);
+        			}
+        		} else {
+        			console.error(response.text);
+        		}
+				
 			});
         }
 

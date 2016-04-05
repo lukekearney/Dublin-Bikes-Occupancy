@@ -2,11 +2,46 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Hello</title>
+    <link rel="stylesheet" href="static/style.css"/>
+    <link rel="stylesheet" href="static/normalise.css"/>
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise"
+  type="text/javascript"></script>
+    <script src="static/superagent/superagent.js"></script>
+    <script src="static/js/handlebars/dist/handlebars.runtime.js"></script>
+    <script src="static/js/BikesModule.js"></script>
+    <script src="static/js/MapsModule.js"></script>
+    <script src="static/js/PageModule.js"></script>
+    <script src="static/js/templates.js"></script>
 </head>
 <body>
     {% for d in mData %}
     <div data-id="{{d.id}}">{{ d.name }}</div>
     {% endfor %}
+    <div id = "wrapper">
+		<button id = "btn">Click me</button>
+   	</div>
+
+    <script>
+    // PageModule.gotoPage("/station/my-station", 10);
+    // PageModule.gotoPage("/station/10/");
+    // PageModule.gotoPage("station/10");
+    window.addEventListener('popstate', function(e) {
+    	var state = PageModule.getState();
+    	if (state) {
+    		PageModule.gotoPage(state);
+    		PageModule.setState(history.state);
+    	}
+	    
+	});
+
+	document.getElementById("btn").addEventListener("click", function(e){
+		console.log(e);
+    	PageModule.gotoPage("/station/north-circular-road");
+	});
+
+	history.pushState(null, null, window.location.pathname);
+    
+    </script>
 </body>
 </html>
