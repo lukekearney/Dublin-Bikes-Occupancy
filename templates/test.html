@@ -27,6 +27,7 @@
     // PageModule.gotoPage("/station/10/");
     // PageModule.gotoPage("station/10");
     window.addEventListener('popstate', function(e) {
+        //https://css-tricks.com/using-the-html5-history-api/
     	var state = PageModule.getState();
     	if (state) {
     		PageModule.gotoPage(state);
