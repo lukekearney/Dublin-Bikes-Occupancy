@@ -19,9 +19,39 @@ class dbQueries:
 
 
         for index, item in enumerate(results):
+            print(item)
             returned_results[keys[index]] = item
 
         return returned_results
+
+
+    def setup_db(self):
+        """
+        Initialises the database
+        """
+        query = self.conn.execute('CREATE TABLE IF NOT EXISTS real_time (number int, bike_stands int, '
+                                  'available_bikes int, available_bike_stands int, status text, '
+                                  'updated int)')
+
+    def exists(self, number, table):
+        '''
+        Parameter(s): the number of the station and the table to search in
+        Returns: a boolean for whether the item exists in the table or not
+        '''
+        c = self.conn.cursor()
+        query = self.QueryBuilder().count(["number"], table).where([[
+            "number", "=", number
+        ]]).getQuery()
+        print(query)
+        c.execute(query["sql"], query["values"])
+
+        results = c.execute(query["sql"], query["values"]).fetchall()[0][0]
+
+
+        if results > 0:
+            return True
+        else:
+            return False
 
 
     class QueryBuilder:
@@ -43,6 +73,76 @@ class dbQueries:
             self.query = query + " FROM " + table
 
             return self
+
+        def count(self, fields, table):
+            '''
+            Parameter(s): a list of fields and a table in the database
+            Returns: a query to count the number of results
+            '''
+            query = "SELECT COUNT("
+
+            for index, field in enumerate(fields):
+                query += field
+                if index < len(fields) - 1:
+                    query += ","
+
+            self.query = query + ") FROM " + table
+            return self
+
+        def insert(self, fields, values, table):
+            query = "INSERT INTO " + table
+            field_string = ""
+            value_string = ""
+            if fields:
+                field_string += " ("
+                for index, field in enumerate(fields):
+                    field_string += field
+                    if index < len(fields) - 1:
+                        field_string += ","
+
+                field_string += ")"
+
+            query += field_string + " VALUES "
+
+            print(values)
+            if type(values[0]) is list or type(values[0]) is tuple:
+                # has multiple rows to
+
+                for index, value in enumerate(values):
+                    for val in value:
+                        self.values.append(val)
+
+                    value_string += "(" + ",".join("?" for x in value) + ")"
+                    if index < len(values) - 1:
+                        value_string += ","
+
+            else:
+                # has only 1 value to insert
+                values = [val for val in values]
+                value_string += "(" + ",".join("?" for x in values) + ")"
+
+            # set the value of the query
+            self.query = query + value_string
+
+            return self
+
+        def join(self, table, table1col, table2col):
+            query = " JOIN " + table + " ON " + table1col + " = " + table2col
+            print(query)
+            self.query += query
+            return self
+
+        def update(self, fields, values, table):
+            query = "UPDATE " + table + " SET "
+            for index, key in enumerate(fields):
+                query += key + "=?"
+                self.values.append(values[index])
+                if index < len(fields) - 1:
+                    query += ","
+
+            self.query = query
+            return self
+
 
         def where(self, parameters):
             '''
@@ -124,7 +224,26 @@ class dbQueries:
         # Retrieves co-ordinates of station based on the number (i.e. the ID) of the station [2].
         query = self.conn.execute('SELECT position_long, position_lat FROM static WHERE number = :number', {'number':number})
         for row in query:
-            return row  
+            return row
+
+    def static_info_by_name (self, name):
+        name = name.upper()
+        keys = ["number", "name", "address"]
+        query = self.QueryBuilder().select(keys, "static").where([
+            ["name", "=", name]
+        ]).getQuery()
+        print(query)
+        c = self.conn.cursor()
+
+        c.execute(query["sql"], query["values"])
+        items = c.fetchall()
+
+        # labels each result
+        grouped_items = [self.label_results(keys, item) for item in items]
+
+        return grouped_items
+
+
 
     def available_bike_stands(self, number, time):
         '''
@@ -324,6 +443,70 @@ class dbQueries:
             self.conn.execute(query)
             self.conn.commit()
 
+    def get_valid_real_time_count(self):
+        c = self.conn.cursor()
+        current_time = time.time()
+        query = self.QueryBuilder().count(["number"], "real_time").where(
+            [["updated", ">", current_time - 60]]).getQuery()
+        print(query)
+        count = c.execute(query["sql"], query["values"]).fetchall()[0][0]
+        return count
+
+    def insert_new_real_time_values(self, data, update = False):
+        '''
+        Parameter(s): a list of python dictionaries to add to the database
+        Returns: Nothing. Updates values in the table
+        '''
+        db = dbQueries("bikes.db")
+        c = self.conn.cursor()
+        for d in data:
+            new_data = {
+                "number": d["number"],
+                "available_bikes" : d["available_bikes"],
+                "available_bike_stands" : d["available_bike_stands"],
+                "bike_stands" : d["bike_stands"],
+                "status": d["status"],
+                "updated": int(time.time())
+            }
+            # check if the data exists
+            if (not self.exists(d["number"], "real_time")) or update:
+                # insert the data
+                print("fetching new data")
+                query = db.QueryBuilder().insert([key for key in new_data], [[new_data[key] for key in new_data]], "real_time").getQuery()
+                c.execute(query["sql"], query["values"])
+                self.conn.commit()
+
+            else:
+                query = db.QueryBuilder().update([key for key in new_data], [new_data[key] for key in new_data], "real_time").where(
+                    [["number", "=", d["number"]]]
+                ).getQuery()
+                c.execute(query["sql"], query["values"])
+                self.conn.commit()
+
+
+
+    def get_real_time(self, number = None):
+        # check if data is valid
+        c = self.conn.cursor()
+        label_keys = ["number", "name", "available_bike_stands", "bike_stands", "available_bikes", "status", "lat", "long"]
+        keys = ["real_time.number", "name", "available_bike_stands", "real_time.bike_stands", "available_bikes", "status", "position_lat", "position_long"]
+        if number is None:
+            # get all
+            query = self.QueryBuilder().select(keys, "real_time")\
+                .join("static", "real_time.number", "static.number").getQuery()
+        else:
+            # get that station
+            query = self.QueryBuilder().select(keys, "real_time")\
+                .join("static", "real_time.number", "static.number")\
+                .where([["real_time.number", "=", number]]).getQuery()
+
+        print(query)
+        results = c.execute(query["sql"], query["values"]).fetchall()
+        print(results)
+        grouped_items = [self.label_results(label_keys, item) for item in results]
+
+        return grouped_items
+
     def close_connection(self):
         '''
         Parameter(s): None
@@ -336,5 +519,8 @@ if(__name__ == "__main__"):
     print(db.latest_time_logged(10))
     print(db.num_unique_days())
     print(db.get_historical_info_by_id(12))
+    print(db.QueryBuilder().update(["number", "name"], ["10", "bob"], "mTable").where(
+        [["name", "=", "bob"]]
+    ).getQuery())
     # db.add_time_to_db()
 
