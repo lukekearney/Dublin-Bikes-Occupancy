@@ -1,3 +1,4 @@
+$LogoPath : "../images/Logo1Cropped1.png";
 body{
 	background-color: $BackgroundGrey;
 } 
@@ -5,4 +6,12 @@ body{
 button{
 	border-radius: 1em;
 	background-color: $ButtonGreen;
+}
+
+#dropdown{
+	background-color: $DropDownGrey;
+	border: 0.5em, solid $DropDownBorder;
+}
+img #logo{
+	content:src = (#{$LogoPath});
 }
