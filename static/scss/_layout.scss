@@ -1,3 +1,17 @@
+$LogoPath : "../images/Logo1Cropped1.png";
 body{
-	color:aliceblue;
+	background-color: $BackgroundGrey;
+} 
+
+button{
+	border-radius: 1em;
+	background-color: $ButtonGreen;
+}
+
+#dropdown{
+	background-color: $DropDownGrey;
+	border: 0.5em, solid $DropDownBorder;
+}
+img #logo{
+	content:src = (#{$LogoPath});
 }
