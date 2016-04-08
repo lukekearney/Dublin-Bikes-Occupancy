@@ -37,39 +37,43 @@ var MapsModule = (function(){
 	   };
 	}
 
+	function placeMarkers (response) {
+		var data = response;
+		for (var i = 0; i < data.length; i++){
+			
+			var marker = new google.maps.Marker({
+				position: {
+					"lat": data[i].lat,
+					"lng": data[i].long
+				},
+				map: settings.mapObj,
+				title: data[i].name,
+				number: data[i].number,
+				icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
+			});
+
+			marker.addListener("click", function(){
+				// fetches data based on the marker's number
+				BikesModule.getStationHistoricalInformation(this.number, 0);
+				var title = this.title.replace(/\(\w+\)/g, "");
+				title = this.title.replace(/ /g, "-");
+
+				PageModule.gotoPage("station/" + title.toLowerCase());
+				
+				//window.location.href = "station/" + title.toLowerCase();
+				
+			});
+
+			settings.markers.push(marker)
+		}
+	}
+
 	function getMapData(callback){
 		
 		BikesModule.getRealTimeData(function(err, response){
 			console.log(response);
 			if (!err){
-				var data = response;
-				for (var i = 0; i < data.length; i++){
-					
-					var marker = new google.maps.Marker({
-						position: {
-							"lat": data[i].lat,
-							"lng": data[i].long
-						},
-						map: settings.mapObj,
-						title: data[i].name,
-						number: data[i].number,
-						icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
-					});
-
-					marker.addListener("click", function(){
-						// fetches data based on the marker's number
-						BikesModule.getStationHistoricalInformation(this.number, 0);
-						var title = this.title.replace(/\(\w+\)/g, "");
-						title = this.title.replace(/ /g, "-");
-
-						PageModule.gotoPage("station/" + title.toLowerCase());
-						
-						//window.location.href = "station/" + title.toLowerCase();
-						
-					});
-
-					settings.markers.push(marker)
-				}
+				placeMarkers(response);
 			}
 		});
 		
@@ -122,14 +126,7 @@ var MapsModule = (function(){
 		},
 
 		addMarkers: function(json){
-			// add each marker to the map
-			/*
-			for each item in json
-				add marker to the map
-				add info box
-				add marker listeners for charted data
-			end for
-			*/
+			placeMarkers(json);
 		}
 	}
 }())
