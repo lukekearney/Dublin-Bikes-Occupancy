@@ -19,7 +19,7 @@ class dbQueries:
 
 
         for index, item in enumerate(results):
-            print(item)
+
             returned_results[keys[index]] = item
 
         return returned_results
@@ -42,7 +42,7 @@ class dbQueries:
         query = self.QueryBuilder().count(["number"], table).where([[
             "number", "=", number
         ]]).getQuery()
-        print(query)
+
         c.execute(query["sql"], query["values"])
 
         results = c.execute(query["sql"], query["values"]).fetchall()[0][0]
@@ -104,7 +104,7 @@ class dbQueries:
 
             query += field_string + " VALUES "
 
-            print(values)
+
             if type(values[0]) is list or type(values[0]) is tuple:
                 # has multiple rows to
 
@@ -500,9 +500,9 @@ class dbQueries:
                 .join("static", "real_time.number", "static.number")\
                 .where([["real_time.number", "=", number]]).getQuery()
 
-        print(query)
+
         results = c.execute(query["sql"], query["values"]).fetchall()
-        print(results)
+
         grouped_items = [self.label_results(label_keys, item) for item in results]
 
         return grouped_items

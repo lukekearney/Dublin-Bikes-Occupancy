@@ -3,6 +3,21 @@ var BikesModule = (function(){
 
 	}
 
+	function hasStoredRealTime(station = null) {
+		// load the data using the cache module
+		var loaded = CacheModule.load("real-time");
+		if (loaded == null) {
+			return false;
+		} 
+
+		return true;
+
+	}
+
+	function saveRealTime(data) {
+		CacheModule.save("real-time", data, 60);
+	}
+
     return {
         getStationHistoricalInformation: function(number, day = null, callback = null){
         	var request = window.superagent;	
@@ -12,7 +27,6 @@ var BikesModule = (function(){
         		url += "/" + day;
         	}
         	
-
             request.get(url, function(err, response){
 				// console.log('Response ok:', response.ok);
 				// console.log('Response text:', response.text);
@@ -39,6 +53,8 @@ var BikesModule = (function(){
 			
         },
 
+        
+
         getStationInfo: function(address, callback = null) {
         	var request = window.superagent;
         	address = address.replace(/ /g, "-");
@@ -49,7 +65,6 @@ var BikesModule = (function(){
         		if (!err) {
         			
         			var data = JSON.parse(response.text);
-        			console.log(data);
         			if (callback) {
         				callback(null, data);
         			}
@@ -58,7 +73,31 @@ var BikesModule = (function(){
         		}
 				
 			});
-        }
+        },
+
+        getRealTimeData: function(callback) {
+        	var request = window.superagent;
+        	if (!hasStoredRealTime()) {
+        		var url = "http://localhost:5000/api/real-time";
+        		console.log("No valid real time data stored. Fetching");
+				request.get(url, function(err, response){
+					// console.log('Response ok:', response.ok);
+					// console.log('Response text:', response.text);
+					// need to do more error handling here.
+					if (!err) {
+						var json = JSON.parse(response.text)
+						callback(err, json);
+						saveRealTime(json);
+					}
+					
+				});
+        	} else {
+        		console.log("Valid real time data stored. Loading");
+	        	var data = CacheModule.load("real-time");
+	        	callback(null, data);
+        	
+        	}
+    	}
 
     }
 }())

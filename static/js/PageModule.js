@@ -140,7 +140,6 @@ var PageModule = (function(){
 		gotoPage: function(url, push=true){
 			//https://css-tricks.com/using-the-html5-history-api/
 			// if it matches a station pattern, get that station
-			console.log("url is " + url);
 			var re = new RegExp(/\/?station\/\w+\/?/, "i");
 			
 			if (url != null && url != "/"){

@@ -94,8 +94,10 @@ def real_time():
     db = dbQueries("bikes.db")
     count = db.get_valid_real_time_count()
     # check if there was valid real_time data
+    print(count)
     if count == 0:
         # fetch data from api
+        print("no valid data. Fetching new data")
         data = helpers.request_new_data()
         db.insert_new_real_time_values(data)
     # fetch all data to send back

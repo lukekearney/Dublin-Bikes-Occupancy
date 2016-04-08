@@ -61,3 +61,23 @@ describe("Fetch Station historical data by number only", function() {
 	    
 	});
 });
+
+describe("Fetch All real time data", function() {
+	var res;
+	var valid = true;
+	beforeEach(function(done) {
+	    BikesModule.getRealTimeData(49, null, function(err, result) {
+		   	if (result.length == 0) {
+		   		valid = false;
+		   	}
+	   	done();
+	   })
+	  });
+	
+
+    it("should fetch an array of objects giving occupancy data for the given station", function(done) {
+	    expect(valid).toBeTruthy();
+	    done();
+	    
+	});
+});
