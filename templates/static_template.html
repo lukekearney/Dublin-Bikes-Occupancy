@@ -5,15 +5,16 @@
 	<head>
 		<title>Dublin Bikes</title>
 		<link rel="stylesheet" type=text/css href="static/style.css"/>
+		<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
 	</head>
 	
 	<body>
-		<div id = stats>
+			
+		<div id = "stats">
 		<h1>Statistics</h1>
-			<h2>Number: {{number}}</h2>
-			<h2>Name: {{name}} </h2>
-			<h2>Address: {{address}}</h2>
-			<h2>Position: {{position}}</h2>
+			<h2 id = "StationName2">Name: {{tempName}} </h2>
+			<h2 id = "LiveData">Address: {{tempAddress}}</h2>
+			<h2>Position: {{tempPosition}}</h2>
 			<h2>Available bikes {{availableBikes}} </h2>
 			<h2>Available bike stands: {{availableBikeStands}}</h2>
 			<h2>Take credit: {{banking}}</h2>	
