@@ -19,3 +19,4 @@ static/css
 node_modules
 config
 config.zip
+bikes.db
