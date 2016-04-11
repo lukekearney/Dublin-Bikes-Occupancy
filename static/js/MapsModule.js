@@ -52,7 +52,7 @@ var MapsModule = (function(){
 				number: data[i].number,
 				icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
 			});
-			console.log(marker.title + " is " + getColour(data[i].available_bikes / data[i].bike_stands))
+			
 
 			marker.addListener("click", function(){
 				// fetches data based on the marker's number
