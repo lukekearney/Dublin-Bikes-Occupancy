@@ -27,13 +27,14 @@ var MapsModule = (function(){
 
 	// http://stackoverflow.com/questions/7095574/google-maps-api-3-custom-marker-color-for-default-dot-marker/18623391#18623391
 	function pinSymbol(color) {
+		console.log(color);
 	    return {
 	        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
 	        fillColor: color,
 	        fillOpacity: 1,
-	        strokeColor: '#000',
-	        strokeWeight: 2,
-	        scale: 1,
+	        strokeColor: '#ffcc00',
+	        strokeWeight: 1,
+	        scale: 10,
 	   };
 	}
 
@@ -51,6 +52,7 @@ var MapsModule = (function(){
 				number: data[i].number,
 				icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
 			});
+			
 
 			marker.addListener("click", function(){
 				// fetches data based on the marker's number
