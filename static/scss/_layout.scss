@@ -20,7 +20,6 @@ body{
 	font-family: $text-primary;
 } 
 
-
 button{
 	border-radius: 1em;
 	background-color: $ButtonPrimary;
@@ -30,10 +29,19 @@ button{
 	border: 0.5em, solid $DropDownBorder;
 }
 
-
 header img{
-    width:20px;
-    height: 20px;
+    width: 100px;
+    height: 100px;
+}
+
+header div, img{
+	width: 50%;
+	display: inline-block;
+	margin-top: 1em;
+}
+
+header h1{
+	margin: 0em;
 }
 
 
@@ -41,13 +49,8 @@ body{
 	font-family: $text-primary;
 }
 
-#header{
-	padding:2%;
-}
-
 #map{
 	padding:2%;
-
 }
 
 #leftHeader{

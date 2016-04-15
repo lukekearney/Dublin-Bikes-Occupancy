@@ -331,11 +331,11 @@ class dbQueries:
         Returns: an array of dictionaries containing occupancy data, day, hour and minute
         '''
         # the keys to fetch
-        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+        keys = ["number", "avg(bike_stands)", "avg(available_bike_stands)", "avg(available_bikes)", "day", "hour", "minute"]
 
         query = self.QueryBuilder().select(keys, "dynamic").where([
             ["number", "=", id]
-        ]).getQuery()
+        ]).groupBy("day").getQuery()
 
         c = self.conn.cursor()
 
@@ -354,11 +354,11 @@ class dbQueries:
         Returns: an array of dictionaries containing occupancy data, day, hour and minute
         '''
         # the keys to fetch
-        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+        keys = ["number", "avg(bike_stands)", "avg(available_bike_stands)", "avg(available_bikes)", "day", "hour", "minute"]
 
         query = self.QueryBuilder().select(keys, "dynamic").where([
             ["number", "=", id], ["day", "=", day]
-        ]).getQuery()
+        ]).groupBy("day").getQuery()
 
         c = self.conn.cursor()
 
@@ -367,7 +367,7 @@ class dbQueries:
 
         # labels each result
         grouped_items = [self.label_results(keys, item) for item in items]
-
+        print(grouped_items)
         return grouped_items
             
     
