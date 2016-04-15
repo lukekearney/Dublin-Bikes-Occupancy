@@ -1,22 +1,50 @@
-<!doctype html>
-
-<html lang="en">
-	
+!DOCTYPE HTML>
+<html>
 	<head>
-		<title>Dublin Bikes</title>
-		<link rel="stylesheet" type=text/css href="static/style.css"/>
+		<style>
+		</style>
+		<meta charset="UTF-8">
 		<link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
-	</head>
-	
+		<link rel="stylesheet" type=text/css href="style.css"/>
+	<head>
+		
 	<body>
-			
-		<div id = "stats">
-		<h1>Statistics</h1>
-			<h2 id = "StationName2">Name: {{tempName}} </h2>
-			<h2 id = "LiveData">Address: {{tempAddress}}</h2>
-			<h2>Position: {{tempPosition}}</h2>
-			<h2>Available bikes {{availableBikes}} </h2>
-			<h2>Available bike stands: {{availableBikeStands}}</h2>
-			<h2>Take credit: {{banking}}</h2>	
+		<div id = header>
+			<h1 id = "logo">DB logo</h1>
 		</div>
-	</body>
+		
+		<div id = "map"> map</div>
+	
+			<div id = "leftHeader">
+					<h2>Station number</h2>
+					<h3>Live data</h3>
+					<ul>
+						<li> total</li>
+						<li id = statVariable> 32 </li>
+					</ul>
+				
+					<ul>
+						<li> Bikes available</li>
+						<li id = statVariable> 14</li>
+
+					</ul>
+				
+					<ul>
+						<li> Stands available</li>
+						<li id = statVariable> 18</li>
+					</ul>
+				
+				<div id = "piecharts">Piecharts</div>
+				
+			</div>
+		
+		
+		
+			<div id = "rightHeader">
+				<p>Address</p>
+				<h3>Historical data</h>
+				
+				<div id = graph>Graph</div>		
+			</div>
+	<body>
+<html>
