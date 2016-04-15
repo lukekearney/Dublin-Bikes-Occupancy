@@ -167,7 +167,6 @@ def station(name):
 
     return json.dumps(info)
 
-
 @application.route('/about')
 def about():
     data = [
