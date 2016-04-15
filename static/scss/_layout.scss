@@ -1,0 +1,44 @@
+body, html{
+    height:100%;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+.m-wrapper{
+	height:100%;
+}
+
+.mapping{
+	height:100%;
+	width:100%;
+	background:#ccc;
+}
+
+body{
+	background-color: $BackgroundGrey;
+	font-family: $text-primary;
+} 
+<<<<<<< HEAD
+//test comment
+=======
+>>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
+
+button{
+	border-radius: 1em;
+	background-color: $ButtonGreen;
+}
+
+#dropdown{
+	background-color: $DropDownGrey;
+	border: 0.5em, solid $DropDownBorder;
+}
+<<<<<<< HEAD
+=======
+
+header img{
+    width:70px;
+    height: 70px;
+}
+>>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
