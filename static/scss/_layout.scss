@@ -6,15 +6,9 @@ body, html{
 	box-sizing: border-box;
 }
 
-.m-wrapper{
-	height:100%;
-}
+body{
+	font-family: $text-primary;
 
-.mapping{
-	height:100%;
-	width:100%;
-	background:#ccc;
-}
 
 body{
 	font-family: $text-primary;
@@ -23,10 +17,18 @@ body{
 button{
 	border-radius: 1em;
 	background-color: $ButtonPrimary;
+	padding: 1em;
+	color: white;
 }
 
-#dropdown{
-	border: 0.5em, solid $DropDownBorder;
+input[type=text] {
+	background-color: $DropDownPrimary;
+	text-align: center;
+	padding: 1em;
+	margin: 1em;
+	box-sizing: border-box;
+	border: 0.2em solid grey;
+	border-radius: 0.5em;
 }
 
 header img{
@@ -42,11 +44,6 @@ header div, img{
 
 header h1{
 	margin: 0em;
-}
-
-
-body{
-	font-family: $text-primary;
 }
 
 #map{
@@ -88,4 +85,16 @@ body{
 #piechart{
 	width:300%;
 	height:300%;
+}
+
+}
+
+.m-wrapper{
+	height:100%;
+}
+
+.mapping{
+	height:100%;
+	width:100%;
+	background:#ccc;
 }
