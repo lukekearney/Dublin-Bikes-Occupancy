@@ -23,7 +23,7 @@ body{
 
 button{
 	border-radius: 1em;
-	background-color: $ButtonGreen;
+	background-color: $ButtonPrimary;
 }
 
 #dropdown{
@@ -38,7 +38,7 @@ header img{
 
 
 body{
-	font-family: 'hind', sans-serif;
+	font-family: $text-primary;
 }
 
 #header{
@@ -65,7 +65,7 @@ body{
 	
 }
 
-#leftHeader il{
+#leftHeader li{
 	font-size:80%;
 }
 #statVariable{
