@@ -343,6 +343,7 @@ class dbQueries:
         items = c.fetchall()
 
         # labels each result
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
         grouped_items = [self.label_results(keys, item) for item in items]
 
         return grouped_items

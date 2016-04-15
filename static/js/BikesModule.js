@@ -43,6 +43,7 @@ var BikesModule = (function(){
 				} else {
 					if (callback) {
 						callback (err, response.text);
+						
 						return response.text;
 					}
 

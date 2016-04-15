@@ -183,6 +183,23 @@ def num_bikes(address):
 	return render_template('station.html', Data=data)
 	
 
+@application.route("/test-station/<address>")
+def test_num_bikes(address):
+    db = dbQueries("bikes.db")
+    address = address.replace("-", " ")
+    id = db.station_to_ID(address)
+    count = db.get_valid_real_time_count()
+    # check if there was valid real_time data
+    if count == 0:
+        # fetch data from api
+        data = helpers.request_new_data()
+        db.insert_new_real_time_values(data, True)
+    # fetch all data to send back
+    real_time = db.get_real_time(id)
+    data = real_time[0]
+    return render_template('station-test.html', Data=data)
+
+
 @application.route('/about')
 def about():
     data = [
