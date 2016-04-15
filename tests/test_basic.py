@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 
 from .context import src
-
+from src import helpers
 import unittest
 
 
 class BasicTestSuite(unittest.TestCase):
     """Basic test cases."""
 
-    def sample(self):
-        assert True
+    def test_fetch_data(self):
+        data = helpers.request_new_data()
+        assert len(data) > 1
 
 
 

@@ -7,7 +7,7 @@ __author__ = "Ellen Rushe"
 from src.dbQueries import dbQueries
 
 # Test using 'bikes' database.
-dbq = dbQueries('test_db_bikes.db')
+dbq = dbQueries('bikes.db')
 
 def test_station_to_ID():
     assert dbq.station_to_ID('BLACKHALL PLACE')==88
@@ -45,5 +45,13 @@ def test_num_bike_stations():
 
 def test_take_credit():
     assert dbq.take_credit('88')==False and dbq.take_credit('33')==True
-    
 
+def test_historical_by_id():
+    assert dbq.get_historical_info_by_id(10)[0]["number"] == 10
+
+def test_historical_by_id_and_day():
+    data = dbq.get_historical_info_by_id_and_day(10, 0)
+    assert data[0]["day"] == 0 and data[0]["number"] == 10
+    
+def test_real_time_fetch():
+    assert len(dbq.get_real_time()) > 1 and dbq.get_real_time(10)[0]["number"] == 10

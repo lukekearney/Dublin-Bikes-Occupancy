@@ -25,40 +25,65 @@ var MapsModule = (function(){
 
 	}
 
+	// http://stackoverflow.com/questions/7095574/google-maps-api-3-custom-marker-color-for-default-dot-marker/18623391#18623391
+	function pinSymbol(color) {
+		console.log(color);
+	    return {
+	        path: 'M 0,0 C -2,-20 -10,-22 -10,-30 A 10,10 0 1,1 10,-30 C 10,-22 2,-20 0,0 z M -2,-30 a 2,2 0 1,1 4,0 2,2 0 1,1 -4,0',
+	        fillColor: color,
+	        fillOpacity: 1,
+	        strokeColor: '#ffcc00',
+	        strokeWeight: 1,
+	        scale: 10,
+	   };
+	}
+
+	function placeMarkers (response) {
+		var data = response;
+		for (var i = 0; i < data.length; i++){
+
+			var marker = new google.maps.Marker({
+				position: {
+					"lat": data[i].lat,
+					"lng": data[i].long
+				},
+				map: settings.mapObj,
+				title: data[i].name,
+				number: data[i].number,
+				icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
+			});
+
+
+			marker.addListener("click", function(){
+				// fetches data based on the marker's number
+				BikesModule.getStationHistoricalInformation(this.number, 0);
+				var title = this.title.replace(/\(\w+\)/g, "");
+				title = this.title.replace(/ /g, "-");
+
+				PageModule.gotoPage("station/" + title.toLowerCase());
+
+				//window.location.href = "station/" + title.toLowerCase();
+
+			});
+
+			settings.markers.push(marker)
+		}
+	}
+
 	function getMapData(callback){
-		var request = window.superagent;
-		var url = "http://localhost:5000/api/static";
-		request.get(url, function(err, response){
-			// console.log('Response ok:', response.ok);
-			// console.log('Response text:', response.text);
-			// need to do more error handling here.
+
+		BikesModule.getRealTimeData(function(err, response){
+			console.log(response);
 			if (!err){
-				var data = JSON.parse(response.text);
-				for (var i = 0; i < data.length; i++){
-					console.log(data[i]);
-					var marker = new google.maps.Marker({
-						position: {
-							"lat": data[i].position.lat,
-							"lng": data[i].position.lang
-						},
-						map: settings.mapObj,
-						title: data[i].name,
-						number: data[i].number
-					});
-
-					marker.addListener("click", function(){
-						// fetches data based on the marker's number
-						BikesModule.getStationHistoricalInformation(this.number, 0)
-					});
-
-					settings.markers.push(marker)
-				}
+				placeMarkers(response);
 			}
 		});
+
+
 		//based on http://www.w3schools.com/ajax/tryit.asp?filename=tryajax_get
 		// var xmlhttp = new XMLHttpRequest();
 		// var url = "https://localhost:5000/api/static";
-		
+
 
 		// xmlhttp.onreadystatechange = function () {
 		// 	if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
@@ -71,7 +96,7 @@ var MapsModule = (function(){
 		// 			// default response to successful request
 		// 			console.log("Request completed successfully: ");
 		// 			console.log(response);
-					
+
 		// 		}
 		// 	} else if (xmlhttp.readyState === 4 && (xmlhttp.status >= 400 || xmlhttp.status < 500)){
 		// 		// error handling
@@ -103,14 +128,7 @@ var MapsModule = (function(){
 		},
 
 		addMarkers: function(json){
-			// add each marker to the map
-			/*
-			for each item in json
-				add marker to the map
-				add info box
-				add marker listeners for charted data
-			end for
-			*/
+			placeMarkers(json);
 		}
 	}
 }())
