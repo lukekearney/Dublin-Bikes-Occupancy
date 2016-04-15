@@ -17,7 +17,6 @@ body, html{
 }
 
 body{
-	background-color: $BackgroundGrey;
 	font-family: $text-primary;
 } 
 
@@ -28,7 +27,6 @@ button{
 }
 
 #dropdown{
-	background-color: $DropDownGrey;
 	border: 0.5em, solid $DropDownBorder;
 }
 
