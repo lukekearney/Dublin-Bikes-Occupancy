@@ -15,13 +15,13 @@
     <script src="static/js/templates.js"></script>
 </head>
 <body>
-    {% for d in mData %}
-    <div data-id="{{d.id}}">{{ d.name }}</div>
-    {% endfor %}
+<!--    {% for d in mData %}-->
+<!--    <div data-id="{{d.id}}">{{ d.name }}</div>-->
+<!--    {% endfor %}-->
     <div id = "wrapper">
 		<button id = "btn">Click me</button>
    	</div>
-
+	{{mData.available_bikes}}
     <script>
     // PageModule.gotoPage("/station/my-station", 10);
     // PageModule.gotoPage("/station/10/");
