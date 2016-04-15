@@ -132,7 +132,7 @@ def setup_db():
     return "setting up database"
 
 
-@application.route('/to_static_template/<location>/<time>')
+@application.route('/to_static_template/<location>')
 def to_static_template(location):
     '''
     Used for passing information to the static template
