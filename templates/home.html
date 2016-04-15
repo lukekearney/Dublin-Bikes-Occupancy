@@ -27,10 +27,19 @@
     
         function GoToURL()
         {
-        	console.log("click");
-    		var form = document.getElementById("Inputs");
-    		var station = form.options[form.selectedIndex].value;
-    		window.location = station;
+    		//var form = document.getElementById("Inputs");
+    		//var station = form.option[form.selectedIndex].value;
+    		//window.open = station;
+    		
+		    var ddl = document.getElementById("Inputs");
+		    console.log(ddl);
+		    
+		    //option.value (barrow street) = 1    
+    		var selectedVal = ddl.options[ddl.selectIndex].value;
+    		console.log(selectedVal);
+//
+//    		window.open = selectedVal;
+    		
 		}
         // initialise the application
         var initialise = function () {
@@ -65,13 +74,14 @@
     </header>
 
     <div>
-        <form name = 'Inputs' method = 'post'>
+        <form name = 'dropdownform' id="Inputs" method = 'post'>
             <select name = 'station'>
 		        {% for name in mdata %}
-		        <option value = "/api/station-info/{{name}}"> {{name}}</option>
+		        <option value = "/api/station-info/{{name}}">{{name}}</option>
 		        {% endfor %}
 			 </select>
             <button onclick = "GoToURL()"> GO! </button>
+            
         </form>
     </div>
 
