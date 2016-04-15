@@ -60,6 +60,13 @@
             <input type = 'text' name = 'station'>
             <button> GO! </button>
         </form>
+        <div id = "dropdown">
+	        <ul>
+		        {% for name in mdata %}
+		        <li><a href = "/api/station-info/{{name}}">{{name}}</a></li>
+		        {% endfor %}
+		    </ul>
+	    </div>
     </div>
 
     <div id="wrapper" class="m-wrapper">
