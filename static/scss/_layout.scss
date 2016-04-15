@@ -1,0 +1,33 @@
+body, html{
+    height:100%;
+}
+
+*{
+	box-sizing: border-box;
+}
+
+.m-wrapper{
+	height:100%;
+}
+
+.mapping{
+	height:100%;
+	width:100%;
+	background:#ccc;
+}
+
+body{
+	background-color: $BackgroundGrey;
+	font-family: $text-primary;
+} 
+//test comment
+
+button{
+	border-radius: 1em;
+	background-color: $ButtonGreen;
+}
+
+#dropdown{
+	background-color: $DropDownGrey;
+	border: 0.5em, solid $DropDownBorder;
+}
