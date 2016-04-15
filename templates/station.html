@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+
+    <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="/static/css/main.css" />
+    <link rel="stylesheet" href="/static/normalise.css" />
+
+    <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
+    <script src="/static/superagent/superagent.js"></script>
+    <script src="/static/js/handlebars/dist/handlebars.runtime.js"></script>
+    <script src="/static/js/templates.js"></script>
+    <script src="/static/js/helpers.js"></script>
+    <script src="/static/js/Timer.js"></script>
+    <script src="/static/js/CacheModule.js"></script>
+    <script src="/static/js/BikesModule.js"></script>
+    <script src="/static/js/PageModule.js"></script>
+    <script src="/static/js/MapsModule.js"></script>
+</head>
+
+<body>
+
+    <script type="text/javascript">
+        // initialise the application
+        var initialise = function () {
+            MapsModule.init(document.getElementById("map"));
+        }
+        BikesModule.getStationHistoricalInformation(101, 0);
+
+        // window.addEventListener('popstate', function(e) {
+        //   var state = PageModule.getState();
+        //   console.log(state);
+        //   if (state) {
+        //     PageModule.gotoPage(state);
+        //     PageModule.setState(history.state);
+        //   } else {
+        //     if (history.state) {
+        //       console.log(history.state);
+        //       PageModule.gotoPage(history.state);
+        //     }
+        //   }
+
+        // });
+
+        history.pushState(null, null, window.location.pathname);
+    </script>
+
+    <header>
+    	<div>
+        	<h1>Dublin Bikes</h1>
+        </div>
+            <img id="logo" src="../static/images/logo-cropped.png">
+    </header>
+
+    <div id="wrapper" class="m-wrapper">
+        <div id="map" class="mapping">
+            <!-- map goes here -->
+        </div>
+    </div>
+    <div id="leftHeader">
+        <h2>Station number</h2>
+        <h3>Live data</h3>
+        <ul>
+            <li> total</li>
+            <li id=statVariable> {{Data.}} </li>
+        </ul>
+
+        <ul>
+            <li> Bikes available</li>
+            <li id=statVariable> {{Data.available_bikes}}</li>
+
+        </ul>
+
+        <ul>
+            <li> Stands available</li>
+            <li id=statVariable> Data.available_stands</li>
+        </ul>
+
+        <div id="piecharts">Piecharts</div>
+
+    </div>
+
+
+
+    <div id="rightHeader">
+        <p>Address</p>
+        <h3>Historical data</h3>
+
+        <div id=g raph>Graph</div>
+    </div>
+</body>
+
+</html>

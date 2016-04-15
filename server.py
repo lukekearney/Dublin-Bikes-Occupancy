@@ -180,7 +180,7 @@ def num_bikes(address):
 	# fetch all data to send back
 	real_time = db.get_real_time(id)
 	data = real_time[0]
-	return render_template('test.html', mData=data)
+	return render_template('station.html', Data=data)
 	
 
 @application.route('/about')
