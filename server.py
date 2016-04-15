@@ -14,8 +14,17 @@ application = Flask(__name__)
 
 @application.route("/", methods = ['GET', 'POST'])
 def hello():
-#     station=request.form['station']
-    return render_template("home.html")
+    db = dbQueries("bikes.db")
+    data = db.get_all_names()
+    
+    #list to string
+#     string = str(data)
+#     string = string.strip("[]").replace(",", " ")
+#     formatted = string.replace("(", "<p>").replace(")", "</p>")
+    
+    # change list of tuples to list
+    formatted = [tuple[0] for tuple in data]
+    return render_template("home.html" ,mdata = formatted)
 
 
 @application.route('/api')
