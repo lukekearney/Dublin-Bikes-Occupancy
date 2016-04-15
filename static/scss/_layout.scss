@@ -38,3 +38,48 @@ header img{
     height: 70px;
 }
 
+
+body{
+	font-family: 'hind', sans-serif;
+}
+
+#header{
+	padding:2%;
+}
+
+#map{
+	padding:2%;
+
+}
+
+#leftHeader{
+	height:25%;
+	width:25%;
+	padding:5%;
+	float:left;
+}
+
+#leftHeader ul{
+	display: inline-block;
+	list-style: none;
+	padding:1%;
+	margin:1%;
+	
+}
+
+#leftHeader il{
+	font-size:80%;
+}
+#statVariable{
+	font-size:170%;
+	text-align:center;
+	color:deepskyblue;
+}
+
+#rightHeader{
+	width:25%;
+	width:25%;
+	padding:5%;
+	float:right;
+}
+
