@@ -41,7 +41,7 @@ var MapsModule = (function(){
 	function placeMarkers (response) {
 		var data = response;
 		for (var i = 0; i < data.length; i++){
-			
+
 			var marker = new google.maps.Marker({
 				position: {
 					"lat": data[i].lat,
@@ -52,7 +52,7 @@ var MapsModule = (function(){
 				number: data[i].number,
 				icon: pinSymbol(getColour(data[i].available_bikes / data[i].bike_stands)),
 			});
-			
+
 
 			marker.addListener("click", function(){
 				// fetches data based on the marker's number
@@ -61,9 +61,9 @@ var MapsModule = (function(){
 				title = this.title.replace(/ /g, "-");
 
 				PageModule.gotoPage("station/" + title.toLowerCase());
-				
+
 				//window.location.href = "station/" + title.toLowerCase();
-				
+
 			});
 
 			settings.markers.push(marker)
@@ -71,19 +71,19 @@ var MapsModule = (function(){
 	}
 
 	function getMapData(callback){
-		
+
 		BikesModule.getRealTimeData(function(err, response){
 			console.log(response);
 			if (!err){
 				placeMarkers(response);
 			}
 		});
-		
-		
+
+
 		//based on http://www.w3schools.com/ajax/tryit.asp?filename=tryajax_get
 		// var xmlhttp = new XMLHttpRequest();
 		// var url = "https://localhost:5000/api/static";
-		
+
 
 		// xmlhttp.onreadystatechange = function () {
 		// 	if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
@@ -96,7 +96,7 @@ var MapsModule = (function(){
 		// 			// default response to successful request
 		// 			console.log("Request completed successfully: ");
 		// 			console.log(response);
-					
+
 		// 		}
 		// 	} else if (xmlhttp.readyState === 4 && (xmlhttp.status >= 400 || xmlhttp.status < 500)){
 		// 		// error handling

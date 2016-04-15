@@ -27,12 +27,20 @@ var BikesModule = (function(){
         		url += "/" + day;
         	}
         	
+>>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
             request.get(url, function(err, response){
 				// console.log('Response ok:', response.ok);
 				// console.log('Response text:', response.text);
 				// need to do more error handling here.
 				if (!err){
 					var data = JSON.parse(response.text);
+<<<<<<< HEAD
+					console.log(data);
+					// return the station data
+				}
+			});
+        }
+=======
 					
 					// return the station data
 					if (callback){
@@ -98,6 +106,7 @@ var BikesModule = (function(){
         	
         	}
     	}
+>>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
 
     }
 }())
