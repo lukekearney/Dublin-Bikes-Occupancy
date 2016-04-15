@@ -47,8 +47,6 @@ var BikesModule = (function(){
 					}
 
 				}
-
-				callback(null, []);
 			});
 
         },
