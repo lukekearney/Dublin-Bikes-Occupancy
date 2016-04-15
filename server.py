@@ -10,10 +10,11 @@ path = os.path.dirname(os.path.realpath(__file__))
 conn = sqlite3.connect(path + "/bikes.db")
 
 application = Flask(__name__)
+    
 
-
-@application.route("/")
+@application.route("/", methods = ['GET', 'POST'])
 def hello():
+#     station=request.form['station']
     return render_template("home.html")
 
 

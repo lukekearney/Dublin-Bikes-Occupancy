@@ -507,6 +507,12 @@ class dbQueries:
         grouped_items = [self.label_results(label_keys, item) for item in results]
 
         return grouped_items
+    
+    def get_all_names(self):
+        c = self.conn.cursor()
+        data = c.execute("SELECT name FROM static ORDER BY name")
+        data = data.fetchall()
+        return data
 
     def close_connection(self):
         '''
@@ -517,11 +523,13 @@ class dbQueries:
         
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
-    print(db.latest_time_logged(10))
-    print(db.num_unique_days())
-    print(db.get_historical_info_by_id(12))
-    print(db.QueryBuilder().update(["number", "name"], ["10", "bob"], "mTable").where(
-        [["name", "=", "bob"]]
-    ).getQuery())
+#     print(db.latest_time_logged(10))
+#     print(db.num_unique_days())
+#     print(db.get_historical_info_by_id(12))
+#     print(db.QueryBuilder().update(["number", "name"], ["10", "bob"], "mTable").where(
+#         [["name", "=", "bob"]]
+#     ).getQuery())
+    
+    print(db.get_all_names())
     # db.add_time_to_db()
 

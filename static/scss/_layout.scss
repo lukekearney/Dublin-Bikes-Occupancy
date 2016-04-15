@@ -15,6 +15,7 @@ body{
 } 
 
 button{
+	width: 10%;
 	border-radius: 1em;
 	background-color: $ButtonPrimary;
 	padding: 1em;
@@ -22,6 +23,7 @@ button{
 }
 
 input[type=text] {
+	width: 50%;
 	background-color: $DropDownPrimary;
 	text-align: center;
 	padding: 1em;
@@ -30,6 +32,10 @@ input[type=text] {
 	border: 0.2em solid grey;
 	border-radius: 0.5em;
 }
+header{
+	margin-left: 1em;
+
+	}
 
 header img{
     width: 100px;
