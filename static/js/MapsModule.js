@@ -34,7 +34,7 @@ var MapsModule = (function(){
 	        fillOpacity: 1,
 	        strokeColor: '#ffcc00',
 	        strokeWeight: 1,
-	        scale: 10,
+	        scale: 2,
 	   };
 	}
 

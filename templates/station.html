@@ -61,11 +61,11 @@
         </div>
     </div>
     <div id="leftHeader">
-        <h2>Station number</h2>
+        <h2>Station number: {{Data.number}}</h2>
         <h3>Live data</h3>
         <ul>
-            <li> total</li>
-            <li id=statVariable> {{Data.}} </li>
+            <li> Total</li>
+            <li id=statVariable> {{Data.bike_stands}} </li>
         </ul>
 
         <ul>
@@ -76,7 +76,7 @@
 
         <ul>
             <li> Stands available</li>
-            <li id=statVariable> Data.available_stands</li>
+            <li id=statVariable>{{ Data.available_bike_stands}}</li>
         </ul>
 
         <div id="piecharts">Piecharts</div>
@@ -86,10 +86,10 @@
 
 
     <div id="rightHeader">
-        <p>Address</p>
+        <p>{{Address}}</p>
         <h3>Historical data</h3>
 
-        <div id=g raph>Graph</div>
+        <div id=graph>Graph</div>
     </div>
 </body>
 
