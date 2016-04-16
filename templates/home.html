@@ -24,6 +24,23 @@
 <body>
 
     <script type="text/javascript">
+    
+        function GoToURL()
+        {
+    		//var form = document.getElementById("Inputs");
+    		//var station = form.option[form.selectedIndex].value;
+    		//window.open = station;
+    		
+		    var ddl = document.getElementById("Inputs");
+		    console.log(ddl);
+		    
+		    //option.value (barrow street) = 1    
+    		var selectedVal = ddl.options[ddl.selectIndex].value;
+    		console.log(selectedVal);
+//
+//    		window.open = selectedVal;
+    		
+		}
         // initialise the application
         var initialise = function () {
             MapsModule.init(document.getElementById("map"));
@@ -46,6 +63,7 @@
         // });
 
         history.pushState(null, null, window.location.pathname);
+        
     </script>
 
     <header>
@@ -56,17 +74,15 @@
     </header>
 
     <div>
-        <form name = 'Inputs' method = 'post'>
-            <input type = 'text' name = 'station'>
-            <button> GO! </button>
-        </form>
-        <div id = "dropdown">
-	        <ul>
+        <form name = 'dropdownform' id="Inputs" method = 'post'>
+            <select name = 'station'>
 		        {% for name in mdata %}
-		        <li><a href = "/api/station-info/{{name}}">{{name}}</a></li>
+		        <option value = "/api/station-info/{{name}}">{{name}}</option>
 		        {% endfor %}
-		    </ul>
-	    </div>
+			 </select>
+            <button onclick = "GoToURL()"> GO! </button>
+            
+        </form>
     </div>
 
     <div id="wrapper" class="m-wrapper">
