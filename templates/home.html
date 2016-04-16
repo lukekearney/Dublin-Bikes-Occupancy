@@ -25,22 +25,14 @@
 
     <script type="text/javascript">
     
-        function GoToURL()
-        {
-    		//var form = document.getElementById("Inputs");
-    		//var station = form.option[form.selectedIndex].value;
-    		//window.open = station;
-    		
-		    var ddl = document.getElementById("Inputs");
-		    console.log(ddl);
-		    
-		    //option.value (barrow street) = 1    
-    		var selectedVal = ddl.options[ddl.selectIndex].value;
-    		console.log(selectedVal);
-//
-//    		window.open = selectedVal;
+        function GoToURL(form)
+        {		
+		    var url = form.station.options[form.station.selectedIndex].value;
+			console.log(url);    
+    		window.location = url;
     		
 		}
+		
         // initialise the application
         var initialise = function () {
             MapsModule.init(document.getElementById("map"));
@@ -74,13 +66,14 @@
     </header>
 
     <div>
-        <form name = 'dropdownform' id="Inputs" method = 'post'>
+        <form name = 'dropdownform' id="Inputs">
             <select name = 'station'>
 		        {% for name in mdata %}
 		        <option value = "/api/station-info/{{name}}">{{name}}</option>
 		        {% endfor %}
 			 </select>
-            <button onclick = "GoToURL()"> GO! </button>
+<!--            type = button to stop age reloading-->
+            <button type = "button" onclick = "GoToURL(this.form)"> GO! </button>
             
         </form>
     </div>
@@ -89,37 +82,6 @@
         <div id="map" class="mapping">
             <!-- map goes here -->
         </div>
-    </div>
-    <div id="leftHeader">
-        <h2>Station number</h2>
-        <h3>Live data</h3>
-        <ul>
-            <li> total</li>
-            <li id=s tatVariable> 32 </li>
-        </ul>
-
-        <ul>
-            <li> Bikes available</li>
-            <li id=s tatVariable> 14</li>
-
-        </ul>
-
-        <ul>
-            <li> Stands available</li>
-            <li id=s tatVariable> 18</li>
-        </ul>
-
-        <div id="piecharts">Piecharts</div>
-
-    </div>
-
-
-
-    <div id="rightHeader">
-        <p>Address</p>
-        <h3>Historical data</h3>
-
-        <div id=g raph>Graph</div>
     </div>
 </body>
 
