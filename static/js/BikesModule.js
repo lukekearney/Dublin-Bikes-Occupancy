@@ -26,29 +26,54 @@ var BikesModule = (function(){
         	if (day != null){
         		url += "/" + day;
         	}
-        	
-            request.get(url, function(err, response){
-				// console.log('Response ok:', response.ok);
-				// console.log('Response text:', response.text);
-				// need to do more error handling here.
-				if (!err){
-					var data = JSON.parse(response.text);
 
-					// return the station data
-					if (callback){
-						callback(null, data);
-					}
-
-					return data;
-				} else {
-					if (callback) {
-						callback (err, response.text);
-						
-						return response.text;
-					}
-
-				}
+        	var request = $.ajax({
+				url: url,
+				method: "GET",
+				dataType: "text"
 			});
+			 
+			request.done(function( response ) {
+				var data = JSON.parse(response);
+				console.log(response);
+				// return the station data
+				if (callback){
+					callback(null, data);
+				}
+
+				return data;
+			});
+			 
+			request.error(function( jqXHR, textStatus ) {
+				if (callback) {
+						callback (textStatus, textStatus);
+
+						return textStatus;
+					}
+			});
+        	
+   //          request.get(url, function(err, response){
+			// 	// console.log('Response ok:', response.ok);
+			// 	// console.log('Response text:', response.text);
+			// 	// need to do more error handling here.
+			// 	if (!err){
+			// 		var data = JSON.parse(response.text);
+
+			// 		// return the station data
+			// 		if (callback){
+			// 			callback(null, data);
+			// 		}
+
+			// 		return data;
+			// 	} else {
+			// 		if (callback) {
+			// 			callback (err, response.text);
+
+			// 			return response.text;
+			// 		}
+
+			// 	}
+			// });
 
         },
 
@@ -60,18 +85,34 @@ var BikesModule = (function(){
         	// ensure its the correct format
         	var url = "http://localhost:5000/api/station-info/" + address;
 
-        	request.get(url, function(err, response){
-        		if (!err) {
-
-        			var data = JSON.parse(response.text);
-        			if (callback) {
-        				callback(null, data);
-        			}
-        		} else {
-        			console.error(response.text);
-        		}
-
+        	var request = jQuery.ajax({
+				url: url,
+				method: "GET",
+				dataType: "text"
 			});
+			 
+			request.done(function( response ) {
+				var data = JSON.parse(response);
+    			if (callback) {
+    				callback(null, data);
+    			}
+			});
+			 
+			request.error(function( jqXHR, textStatus ) {
+				console.error(textStatus);
+			});
+   //      	request.get(url, function(err, response){
+   //      		if (!err) {
+
+   //      			var data = JSON.parse(response.text);
+   //      			if (callback) {
+   //      				callback(null, data);
+   //      			}
+   //      		} else {
+   //      			console.error(response.text);
+   //      		}
+
+			// });
         },
 
         getRealTimeData: function(callback) {
@@ -79,16 +120,32 @@ var BikesModule = (function(){
         	if (!hasStoredRealTime()) {
         		var url = "http://localhost:5000/api/real-time";
         		console.log("No valid real time data stored. Fetching");
-				request.get(url, function(err, response){
-					// console.log('Response ok:', response.ok);
-					// console.log('Response text:', response.text);
-					// need to do more error handling here.
-					if (!err) {
-						var json = JSON.parse(response.text)
-						callback(err, json);
-						saveRealTime(json);
-					}
+				// request.get(url, function(err, response){
+				// 	// console.log('Response ok:', response.ok);
+				// 	// console.log('Response text:', response.text);
+				// 	// need to do more error handling here.
+				// 	if (!err) {
+				// 		var json = JSON.parse(response.text)
+				// 		callback(err, json);
+				// 		saveRealTime(json);
+				// 	}
 
+				// });
+				var request = jQuery.ajax({
+					url: url,
+					method: "GET",
+					dataType: "text"
+				});
+				 
+				request.done(function( response ) {
+					var json = JSON.parse(response);
+
+	    			callback(null, json);
+					saveRealTime(json);
+				});
+				 
+				request.error(function( jqXHR, textStatus ) {
+					console.error(textStatus);
 				});
         	} else {
         		console.log("Valid real time data stored. Loading");
