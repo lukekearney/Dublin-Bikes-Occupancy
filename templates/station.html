@@ -185,19 +185,21 @@
                 datasets: [
                     {
                         label: 'Average bike availabilty',
-                        fillColor: '#382765',
+						scaleFontColor: '#811BD6',
+                        fillColor: '#811BD6',
                         data: availableBikes
                     },
                     {
                         label: 'Average bike stands availability',
-                        fillColor: '#7BC225',
+                        fillColor: '#9CBABA',
                         data: availableBikeStands
                     }
                 ]
             };
+			var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
 
             var context = document.getElementById('historical-graph').getContext('2d');
-            var historicalChart = new Chart(context).Bar(barData);
+            var historicalChart = new Chart(context).Bar(barData, options);
             document.getElementById("historical-legend").innerHTML = historicalChart.generateLegend()
 
 
