@@ -6,8 +6,8 @@
     <title>Hello</title>
 
     <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" href="static/css/main.css" />
     <link rel="stylesheet" href="static/normalise.css" />
+    <link rel="stylesheet" href="static/css/main.css" />
 
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
     
@@ -73,7 +73,8 @@
         <form name = 'dropdownform' id="Inputs">
             <select name = 'station'>
 		        {% for name in mdata %}
-		        <option value = "/api/station-info/{{name}}">{{name}}</option>
+		        <!--<option value = "/api/station-info/{{name}}">{{name}}</option>-->
+		        <option value = "/station/{{name}}">{{name}}</option>
 		        {% endfor %}
 			 </select>
 <!--            type = button to stop age reloading-->
