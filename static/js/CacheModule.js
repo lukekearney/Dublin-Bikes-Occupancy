@@ -26,31 +26,27 @@ var CacheModule = (function() {
         // removes old data from cache, if it has expired. The optional key can be supplied to only target specific storage
         if (window.localStorage) {
             var currentTime = Math.floor(Date.now() / 1000);
-            console.log(currentTime);
             var data;
-            log("clearing");
-            log("current time is " + currentTime);
+            
             if (key) {
                 // check if the key exists
                 if (exists(key)) {  
-                    log(key + "exists");
+                   
                     // check if it has expired
                     data = JSON.parse(getItem(key));
-                    console.log(data);
                     if (data.expires) {
-                        log("data expires:" + data.expires);
+                        
                         // if the current time is higher than the expiry time in the data
                         if (data.expires <= currentTime) {
-                            log("expired:" + key);
+                            
                             // delete from localStorage
-                            console.log(window.localStorage);
+                            
                             removeItem(key);
-                            console.log(window.localStorage);
+                            
                             // return true if removed
                             return true;
                         } else {
-                            log("not removing item:" + key);
-                            log(data.expires + "not less than" + currentTime);
+                            
                             //console.log(key + " has not expired");
                             // return false if not expired
                             return false;
@@ -69,7 +65,7 @@ var CacheModule = (function() {
                     
                     if (localStorage.key(i).match(re)){
                         var key = localStorage.key(i).substring(prefix.length);
-                        console.log("key is: " + key);
+                       
                         // recursively call to remove this key. Check if its removed
                         if(clearExpired(key)){
                             // decrement i to account for removed element
@@ -94,7 +90,6 @@ var CacheModule = (function() {
     }
 
     function removeItem(key){
-        log("removing" + key);
     	return localStorage.removeItem(prefix + key);
     }
 
@@ -103,7 +98,7 @@ var CacheModule = (function() {
             // saves into local storage
             // check if localStorage is supported
             if (window.localStorage) {
-                log("saving " + key);
+                
                 // check if it exists in cache already and updates data if needs be
                 var data;
                 // calculates expiry time
@@ -147,10 +142,6 @@ var CacheModule = (function() {
 
         removeExpired: function(key = null) {
             clearExpired(key);
-        },
-
-        clear: function() {
-
         }
     }
 }())
