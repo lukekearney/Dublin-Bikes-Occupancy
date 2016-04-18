@@ -206,7 +206,7 @@ def test_num_bikes(address):
     # fetch all data to send back
     real_time = db.get_real_time(id)
     data = real_time[0]
-    return render_template('station-test.html', Data=data)
+    return render_template('station-test.html', Data=data, Address = address)
 
 
 @application.route('/about')
