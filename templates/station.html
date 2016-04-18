@@ -28,6 +28,15 @@
 <body>
 
     <script type="text/javascript">
+    
+        function GoToURL(form)
+        {		
+		    var url = form.station.options[form.station.selectedIndex].value;
+			console.log(url);    
+    		window.location = url;
+    		
+		}
+    
         // initialise the application
         var initialise = function () {
             MapsModule.init(document.getElementById("map"));
@@ -55,13 +64,26 @@
 
         //history.pushState(null, null, window.location.pathname);
     </script>
-
+    
     <header>
     	<div>
         	<h1>Dublin Bikes</h1>
         </div>
             <img id="logo" src="../static/images/logo-cropped.png">
     </header>
+
+    <div>
+        <form name = 'dropdownform' id="Inputs">
+            <select name = 'station'>
+		        {% for name in mdata %}
+		        <option value = "/station/{{name | replace(" ", "-")}}">{{name}}</option>
+		        {% endfor %}
+			 </select>
+<!--            type = button to stop age reloading-->
+            <button type = "button" onclick = "GoToURL(this.form)"> GO! </button>
+            
+        </form>
+    </div>
 
     <div id="wrapper" class="m-wrapper">
         <div id="map" class="mapping">
