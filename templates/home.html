@@ -11,8 +11,7 @@
 
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
     
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <!--<script src="/static/superagent/superagent.js"></script>-->
+    <script src="/static/superagent/superagent.js"></script>
    
     
     <script src="static/js/handlebars/dist/handlebars.runtime.js"></script>
@@ -32,7 +31,7 @@
         function GoToURL(form)
         {		
 		    var url = form.station.options[form.station.selectedIndex].value;
-			console.log(url);    
+			   
     		window.location = url;
     		
 		}
@@ -57,6 +56,7 @@
         //   }
 
         // });
+        
 
         history.pushState(null, null, window.location.pathname);
         
@@ -69,7 +69,7 @@
             <img id="logo" src="../static/images/logo-cropped.png">
     </header>
 
-    <div>
+ 
         <form name = 'dropdownform' id="Inputs">
             <select name = 'station'>
 		        {% for name in mdata %}
@@ -80,7 +80,7 @@
             <button type = "button" onclick = "GoToURL(this.form)"> GO! </button>
             
         </form>
-    </div>
+
 
     <div id="wrapper" class="m-wrapper">
         <div id="map" class="mapping">

@@ -66,11 +66,15 @@ describe("Fetch All real time data", function() {
 	var res;
 	var valid = true;
 	beforeEach(function(done) {
-	    BikesModule.getRealTimeData(49, null, function(err, result) {
+	    BikesModule.getRealTimeData(function(err, result) {
 		   	if (result.length == 0) {
 		   		valid = false;
 		   	}
-	   	done();
+
+		   	if (result.length > 200) {
+		   		valid = false;
+		   	}
+	   		done();
 	   })
 	  });
 	

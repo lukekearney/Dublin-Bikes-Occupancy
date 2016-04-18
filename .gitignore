@@ -21,3 +21,4 @@ config.zip
 __pychache__
 *.pyc
 */*.pyc
+bikes.db
