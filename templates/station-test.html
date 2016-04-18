@@ -20,9 +20,9 @@
     <script src="/static/js/BikesModule.js"></script>
     <script src="/static/js/PageModule.js"></script>
     <script src="/static/js/MapsModule.js"></script>
-    <!--<script src="/static/bower_components/Chart.js/dist/Chart.min.js"></script>-->
+    <script src="/static/bower_components/Chart.js/dist/Chart.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </head>
 
 <body>
@@ -31,10 +31,12 @@
         // initialise the application
         var initialise = function () {
             MapsModule.init(document.getElementById("map"));
+            BikesModule.getStationHistoricalInformation({{ Data.number }}, null, function(err, response){
+                console.log(response);
+            });
         }
-        BikesModule.getStationHistoricalInformation({{ Data.number }}, null, function(err, response){
-            console.log(response);
-        });
+
+        
 
         // window.addEventListener('popstate', function(e) {
         //   var state = PageModule.getState();
@@ -51,7 +53,7 @@
 
         // });
 
-        history.pushState(null, null, window.location.pathname);
+        //history.pushState(null, null, window.location.pathname);
     </script>
 
     <header>

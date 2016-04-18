@@ -132,7 +132,6 @@ def real_time_by_station(id):
 
     # send results back
     return json.dumps(real_time)
-    pass
 
 
 @application.route("/database/setup")

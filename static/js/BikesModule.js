@@ -5,6 +5,8 @@ var BikesModule = (function(){
 
 	function hasStoredRealTime(station = null) {
 		// load the data using the cache module
+		// clear cache first
+		CacheModule.removeExpired();
 		var loaded = CacheModule.load("real-time");
 		if (loaded == null) {
 			return false;
@@ -116,7 +118,9 @@ var BikesModule = (function(){
         },
 
         getRealTimeData: function(callback) {
-        	var request = window.superagent;
+        	//var request = window.superagent;
+        	CacheModule.removeExpired();
+        	console.log(window.localStorage);
         	if (!hasStoredRealTime()) {
         		var url = "http://localhost:5000/api/real-time";
         		console.log("No valid real time data stored. Fetching");
@@ -138,6 +142,7 @@ var BikesModule = (function(){
 				});
 				 
 				request.done(function( response ) {
+					console.error(response);
 					var json = JSON.parse(response);
 
 	    			callback(null, json);
@@ -148,8 +153,10 @@ var BikesModule = (function(){
 					console.error(textStatus);
 				});
         	} else {
+
         		console.log("Valid real time data stored. Loading");
 	        	var data = CacheModule.load("real-time");
+	        	console.log("oaded data length is " + data.length);
 	        	callback(null, data);
 
         	}
