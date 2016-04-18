@@ -17,11 +17,6 @@ def hello():
     db = dbQueries("bikes.db")
     data = db.get_all_names()
     
-    #list to string
-#     string = str(data)
-#     string = string.strip("[]").replace(",", " ")
-#     formatted = string.replace("(", "<p>").replace(")", "</p>")
-    
     # change list of tuples to list
     formatted = [tuple[0] for tuple in data]
     return render_template("home.html" ,mdata = formatted)
@@ -175,26 +170,18 @@ def station(name):
         return render_template('404.html', mdata=error), 404
 
     return json.dumps(info)
-@application.route("/station/<address>")
-def num_bikes(address):
-	db = dbQueries("bikes.db")
-	address = address.replace("-", " ")
-	id = db.station_to_ID(address)
-	count = db.get_valid_real_time_count()
-	# check if there was valid real_time data
-	if count == 0:
-		# fetch data from api
-		data = helpers.request_new_data()
-		db.insert_new_real_time_values(data, True)
-	# fetch all data to send back
-	real_time = db.get_real_time(id)
-	data = real_time[0]
-	return render_template('station.html', Data=data, Address = address)
+
 	
 
-@application.route("/test-station/<address>")
+@application.route("/station/<address>")
 def test_num_bikes(address):
     db = dbQueries("bikes.db")
+    
+    mdata = db.get_all_names()
+    
+    # change list of tuples to list
+    formatted = [tuple[0] for tuple in mdata]
+    
     address = address.replace("-", " ")
     id = db.station_to_ID(address)
     count = db.get_valid_real_time_count()
@@ -206,7 +193,7 @@ def test_num_bikes(address):
     # fetch all data to send back
     real_time = db.get_real_time(id)
     data = real_time[0]
-    return render_template('station-test.html', Data=data, Address = address)
+    return render_template('station.html', Data=data, Address = address, mdata = formatted)
 
 
 @application.route('/about')
