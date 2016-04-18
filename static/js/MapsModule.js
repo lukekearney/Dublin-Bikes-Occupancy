@@ -74,9 +74,8 @@ var MapsModule = (function(){
 	function getMapData(callback){
 
 		BikesModule.getRealTimeData(function(err, response){
-			//console.log(response);
 			if (!err){
-				console.error(response)
+				
 				placeMarkers(response);
 			}
 		});

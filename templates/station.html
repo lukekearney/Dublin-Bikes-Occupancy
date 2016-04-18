@@ -11,8 +11,8 @@
 
 
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <!--<script src="/static/superagent/superagent.js"></script>-->
+    
+    <script src="/static/superagent/superagent.js"></script>
     <script src="/static/js/handlebars/dist/handlebars.runtime.js"></script>
     <script src="/static/js/templates.js"></script>
     <script src="/static/js/helpers.js"></script>
@@ -196,8 +196,9 @@
                     }
                 ]
             };
+            {% raw %}
 			var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
-
+            {% endraw %}
             var context = document.getElementById('historical-graph').getContext('2d');
             var historicalChart = new Chart(context).Bar(barData, options);
             document.getElementById("historical-legend").innerHTML = historicalChart.generateLegend()
