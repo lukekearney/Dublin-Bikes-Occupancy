@@ -55,3 +55,7 @@ def test_historical_by_id_and_day():
     
 def test_real_time_fetch():
     assert len(dbq.get_real_time()) > 1 and dbq.get_real_time(10)[0]["number"] == 10
+    
+def test_get_all_names():
+    assert len(dbq.get_all_names()) == 101
+    
