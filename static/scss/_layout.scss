@@ -8,7 +8,7 @@ body, html{
 
 body{
 	font-family: $text-primary;
-
+}
 
 body{
 	font-family: $text-primary;
@@ -24,13 +24,14 @@ button{
 
 select {
 	width: 50%;
+	border-radius: 1em;
 	background-color: $DropDownPrimary;
-	text-align: center;
 	padding: 1em;
 	margin: 1em;
+	text-align: center;
 	box-sizing: border-box;
 	border: 0.2em solid grey;
-	border-radius: 0.5em;
+	
 }
 header{
 	margin-left: 1em;
@@ -93,8 +94,6 @@ header h1{
 	height:300%;
 }
 
-}
-
 .m-wrapper{
 	height:100%;
 }
@@ -103,6 +102,7 @@ header h1{
 	height:100%;
 	width:100%;
 	background:#ccc;
+<<<<<<< HEAD
 }
 
 #dropdown_container{
@@ -130,4 +130,6 @@ ul{
 #rightHeader p{
 	font-weight: 600;
 	font-size:1em;
+=======
+>>>>>>> 9e1f855eef157eff4ae63bdbd5f71de330f2b24d
 }
