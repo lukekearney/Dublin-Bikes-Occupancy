@@ -34,12 +34,13 @@ var MapsModule = (function(){
 	        fillOpacity: 1,
 	        strokeColor: '#ffcc00',
 	        strokeWeight: 1,
-	        scale: 2,
+	        scale: 1,
 	   };
 	}
 
 	function placeMarkers (response) {
 		var data = response;
+		console.log("REAL TIME:" + data.length);
 		for (var i = 0; i < data.length; i++){
 
 			var marker = new google.maps.Marker({
@@ -75,6 +76,7 @@ var MapsModule = (function(){
 		BikesModule.getRealTimeData(function(err, response){
 			//console.log(response);
 			if (!err){
+				console.error(response)
 				placeMarkers(response);
 			}
 		});

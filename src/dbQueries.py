@@ -470,7 +470,7 @@ class dbQueries:
                 "updated": int(time.time())
             }
             # check if the data exists
-            if (not self.exists(d["number"], "real_time")) or update:
+            if (not self.exists(d["number"], "real_time")) and not update:
                 # insert the data
                 print("fetching new data")
                 query = db.QueryBuilder().insert([key for key in new_data], [[new_data[key] for key in new_data]], "real_time").getQuery()
@@ -478,6 +478,7 @@ class dbQueries:
                 self.conn.commit()
 
             else:
+                print("updating new data")
                 query = db.QueryBuilder().update([key for key in new_data], [new_data[key] for key in new_data], "real_time").where(
                     [["number", "=", d["number"]]]
                 ).getQuery()

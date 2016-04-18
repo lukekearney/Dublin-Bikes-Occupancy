@@ -73,8 +73,7 @@
         <form name = 'dropdownform' id="Inputs">
             <select name = 'station'>
 		        {% for name in mdata %}
-		        <!--<option value = "/api/station-info/{{name}}">{{name}}</option>-->
-		        <option value = "/station/{{name.replace(" ", "-")}}">{{name}}</option>
+		        <option value = "/station/{{name | replace(" ", "-")}}">{{name}}</option>
 		        {% endfor %}
 			 </select>
 <!--            type = button to stop age reloading-->

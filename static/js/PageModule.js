@@ -114,7 +114,7 @@ var PageModule = (function(){
 	      PageModule.gotoPage("/", false);
 	      document.title = "page1";
 	    } else {
-	      PageModule.gotoPage("station/" + state, false);
+	      PageModule.gotoPage("/station/" + state, false);
 	      
 	      document.title = "Ghostbuster | " + state;
 	    }
