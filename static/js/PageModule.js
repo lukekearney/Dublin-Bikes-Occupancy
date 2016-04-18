@@ -7,133 +7,44 @@ var PageModule = (function(){
 	}
 	var state;
 	var stationPrefix = "station/"
-	var routes = {
-		"station" : {
-			"pattern": /\/?station\/\w+\/?/,
-			callback: function(url, route){
-				// request information on that station
-				var parts = [];
-				for (var i = 0, urlParts = url.split("/"); i < urlParts.length; i++){
-					// check not an empty string
-					if (urlParts[i].length > 0) {
-						parts.push(urlParts[i]);
-					} 
-				}
+	function updateContent(data) {
+      if (data == null)
+        return;
 
-				var glued = parts.join("/");
-				if (!openPages[glued]) {
-					openPages[glued] = {
-						added: Math.floor(Date.now() / 1000 ),
-						visible: true,
-						id: glued.replace("/", "-")
-					};
-				} else {
-					console.log("page is already open");
-				}
-				
-				console.log(openPages);
-				
-				// get the number for the station
-				BikesModule.getStationInfo(parts[parts.length - 1], function(err, result){
-					// get current day, normalised to Python standard
-					var day = (new Date().getDay() + 6) % 7;
+      contentEl.textContent = data.content;
+      photoEl.src = data.photo;
+    }
 
-					// get data by the number
-					var station = result[0];
-					var data = BikesModule.getStationHistoricalInformation(station.number, day, function(err, data) {
-						// uses error-first callback
+    // Load some mock JSON data into the page
+    function clickHandler(event) {
+      var cat = event.target.getAttribute('href').split('/').pop(),
+          data = cats[cat] || null; // In reality this could be an AJAX request
 
-						if (!err) {
-							var node = createNewPageNode(glued);
-							var html = renderPage(route, {
-								daily: data,
-								station: station
-							});
-							addNewPage(node, html);
-						}
-						// get current URL for push state
-						
-						// https://css-tricks.com/using-the-html5-history-api/
-						history.pushState(window.location.pathname, null, "/" + parts.join("/"));
-						PageModule.setState(history.state);
-						console.log(history);
-						
-						
-					});
-				});
-					
-			}
-		},
-		"home": {
-			"pattern": /\/[\w]*/,
-			callback: function(url, route){
-				// load the home template
-				console.log(route);
-				renderPage(route, {
-					
-				});
-				var node = createNewPageNode(url.replace("/", "-"));
-				var html = renderPage(route, {
-					
-				});
-				addNewPage(node, html);
-				PageModule.setState(history.state);
-				MapsModule.init(document.getElementById("map"));
-			}
-		}
-	}
+      updateContent(data);
 
-	function addNewPage(node, html){
-		node.innerHTML = html
-		//document.getElementById("wrapper").appendChild(node);
-		document.getElementById("wrapper").innerHTML = html;
-	}
+      // Add an item to the history log
+      history.pushState(data, event.target.textContent, event.target.href);
 
-	function createNewPageNode(data){
-		
-		var node = document.createElement("div");
-		
-		// set id of the new node
-		if (data) {
-			node.id = "page-" + data.replace("/", "-");
-		}
-		
-		return node;
-	}
+      return event.preventDefault();
+    }
 
-	function renderPage(template, data){
-		var template = Handlebars.templates[template];
-		var html = template(data);
+    // Attach event listeners
+    for (var i = 0, l = linkEls.length; i < l; i++) {
+      linkEls[i].addEventListener('click', clickHandler, true);
+    }
 
-		return html;
-	}
+    // Revert to a previously saved state
+    window.addEventListener('popstate', function(event) {
+      console.log('popstate fired!');
 
-	window.addEventListener('popstate', function(e) {
-		var state = e.state;
-		if (state == null) {
-	      PageModule.gotoPage("/", false);
-	      document.title = "page1";
-	    } else {
-	      PageModule.gotoPage("/station/" + state, false);
-	      
-	      document.title = "Ghostbuster | " + state;
-	    }
-		// console.log(e.state);
-  //     var state = PageModule.getState();
-  //     console.log(state);
-  //     if (state) {
-  //       PageModule.gotoPage(state);
-  //       PageModule.setState(history.state);
-  //     } else {
-  //       if (history.state) {
-  //         console.log(history.state);
-          
-  //       }
-  //     }
-      
+      updateContent(event.state);
     });
 
-    
+    // Store the initial content so we can revisit it later
+    history.replaceState({
+      content: contentEl.textContent,
+      photo: photoEl.src
+    }, document.title, document.location.href);
 
 	// public exposed properties
 	return {

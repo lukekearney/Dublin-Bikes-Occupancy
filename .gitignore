@@ -18,7 +18,6 @@ static/css
 node_modules
 config
 config.zip
-bikes.db
 __pychache__
 *.pyc
 */*.pyc
