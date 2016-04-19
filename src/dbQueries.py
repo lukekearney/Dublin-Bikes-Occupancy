@@ -311,6 +311,12 @@ class dbQueries:
         query = self.conn.execute('SELECT COUNT(DISTINCT number) FROM dynamic')
         for row in query:
             return row[0]
+
+    def max_station(self):
+        query = self.conn.execute('SELECT MAX(DISTINCT number) FROM static')
+
+        for row in query:
+            return row[0]
             
     def take_credit(self, number):
         '''
