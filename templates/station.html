@@ -19,9 +19,7 @@
     <script src="/static/js/Timer.js"></script>
     <script src="/static/js/CacheModule.js"></script>
     <script src="/static/js/BikesModule.js"></script>
-    <script src="/static/js/PageModule.js"></script>
     <script src="/static/js/MapsModule.js"></script>
-    <script src="/static/bower_components/Chart.js/dist/Chart.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </head>
@@ -197,7 +195,7 @@
                 ]
             };
             {% raw %}
-			var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
+			var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend \"><% for (var i=0; i<datasets.length; i++){%><li><span style=\"background-color:<%=datasets[i].strokeColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
             {% endraw %}
             var context = document.getElementById('historical-graph').getContext('2d');
             var historicalChart = new Chart(context).Bar(barData, options);
