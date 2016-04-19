@@ -10,10 +10,6 @@ body{
 	font-family: $text-primary;
 }
 
-body{
-	font-family: $text-primary;
-} 
-
 button{
 	width: 10%;
 	border-radius: 1em;
@@ -36,22 +32,21 @@ select {
 header{
 	margin-left: 1em;
 	font-size: 2em;
-
+	img{
+	    width: 100px;
+	    height: 100px;
 	}
 
-header img{
-    width: 100px;
-    height: 100px;
-}
+	div, img{
+		width: 50%;
+		display: inline-block;
+		margin-top: 1em;
+	}
 
-header div, img{
-	width: 50%;
-	display: inline-block;
-	margin-top: 1em;
-}
+	h1{
+		margin: 0em;
+	}
 
-header h1{
-	margin: 0em;
 }
 
 #map{
@@ -66,18 +61,17 @@ header h1{
 	width:50%;
 	padding:5%;
 	float:left;
-}
+	ul{
+		display: inline-block;
+		list-style: none;
+		padding:1%;
+		margin:1%;
+		
+	}
 
-#leftHeader ul{
-	display: inline-block;
-	list-style: none;
-	padding:1%;
-	margin:1%;
-	
-}
-
-#leftHeader li{
-	font-size:1em;
+	li{
+		font-size:1em;
+	}
 }
 #statVariable{
 	font-size:1.3em;
@@ -117,17 +111,12 @@ header h1{
 	float: left;
 }
 
-#dropdown_content li{
-	//float: left;
-}
-
 ul{
 	list-style-type: none;
+	a{
+	 	text-decoration: none;
+	 }
 }
- ul a{
- 	text-decoration: none;
- }
-
 
 #address{
 	font-weight: 600;
