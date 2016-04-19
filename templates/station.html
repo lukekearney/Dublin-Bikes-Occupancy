@@ -4,24 +4,22 @@
 <head>
     <meta charset="UTF-8">
     <title>Hello</title>
-
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link href='https://fonts.googleapis.com/css?family=Hind' rel='stylesheet' type='text/css'>
     <link rel="stylesheet" href="/static/normalise.css" />
     <link rel="stylesheet" href="/static/css/main.css" />
-
+    
 
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
-    <!--<script src="/static/superagent/superagent.js"></script>-->
-    <script src="/static/js/handlebars/dist/handlebars.runtime.js"></script>
-    <script src="/static/js/templates.js"></script>
+    
+    <script src="/static/superagent/superagent.js"></script>
+    <!-- <script src="/static/js/handlebars/dist/handlebars.runtime.js"></script> -->
+    <!-- <script src="/static/js/templates.js"></script> -->
     <script src="/static/js/helpers.js"></script>
     <script src="/static/js/Timer.js"></script>
     <script src="/static/js/CacheModule.js"></script>
     <script src="/static/js/BikesModule.js"></script>
-    <script src="/static/js/PageModule.js"></script>
     <script src="/static/js/MapsModule.js"></script>
-    <script src="/static/bower_components/Chart.js/dist/Chart.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
     <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </head>
@@ -66,71 +64,55 @@
         //history.pushState(null, null, window.location.pathname);
     </script>
     
-    <header>
-    	<div>
-        	<h1>Dublin Bikes</h1>
-        </div>
-            <img id="logo" src="../static/images/logo-cropped.png">
-    </header>
-
-    <div>
-        <form name = 'dropdownform' id="Inputs">
-            <select name = 'station'>
-		        {% for name in mdata %}
-		        <option value = "/station/{{name | replace(" ", "-")}}">{{name}}</option>
-		        {% endfor %}
-			 </select>
-<!--            type = button to stop age reloading-->
-            <button type = "button" onclick = "GoToURL(this.form)"> GO! </button>
-            
-        </form>
-    </div>
-
+    {% include "partials/header.html" %}
+    
     <div id="wrapper" class="m-wrapper">
+        <h1 class="station-heading text-center">Station number: {{Data.number}}</h2>
+        <h2 class="station-heading text-center">{{Address}}</h3>
+        <div class="container">
+            <div class="left-item">
+                <h3>Live data</h3>
+                <div class="thirds">
+                    <div class="item">
+                        Total<br>
+                        <span class="statVariable"> {{Data.bike_stands}} </span>
+                    </div>
+                    <div class="item">
+                        Bikes available<br>
+                        <span class="statVariable"> {{Data.available_bikes}}</span>
+                    </div>
+                    <div class="item">
+                        Stands available<br>
+                        <span class="statVariable">{{ Data.available_bike_stands}}</span>
+                    </div>
+                </div>
+                
+                <div id="legend-of-pie"></div>
+                <canvas id="piechart" style="width: 50%; height: 250px;"></canvas>
+                
+
+            </div>
+
+
+
+            <div class="right-item">
+                
+                <h3>Historical data</h3>
+
+                <div id="graph">
+                    <noscript>You need JavaScript enabled to view this item</noscript>
+
+                    <div id="historical-legend"></div>
+                    <!-- as opposed to modern legends, like the moon landings -->
+                    <canvas id="historical-graph" style="width: 100%; height: 500px;"></canvas>
+                </div>
+            </div>
+        </div>
         <div id="map" class="mapping">
             <!-- map goes here -->
         </div>
     </div>
-    <div class="container">
-        <div id="leftHeader">
-            <h2>Station number: {{Data.number}}</h2>
-            <h3>Live data</h3>
-            <ul>
-                <li> Total</li>
-                <li id="statVariable"> {{Data.bike_stands}} </li>
-            </ul>
-
-            <ul>
-                <li> Bikes available</li>
-                <li id="statVariable"> {{Data.available_bikes}}</li>
-
-            </ul>
-
-            <ul>
-                <li> Stands available</li>
-                <li id="statVariable">{{ Data.available_bike_stands}}</li>
-            </ul>
-
-            <canvas id="piechart" style="width: 100%; height: 500px;"></canvas>
-            <div id="legend-of-pie"></div>
-
-        </div>
-
-
-
-        <div id="rightHeader">
-            <p>{{Address}}</p>
-            <h3>Historical data</h3>
-
-            <div id="graph">
-                <noscript>You need JavaScript enabled to view this item</noscript>
-
-                <div id="historical-legend"></div>
-                <!-- as opposed to modern legends, like the moon landings -->
-                <canvas id="historical-graph" style="width: 100%; height: 500px;"></canvas>
-            </div>
-        </div>
-    </div>
+    
     <script>
     BikesModule.getStationHistoricalInformation({{ Data.number }}, null, function(err, response){
         // var ctx = document.getElementById("historical-graph").getContext("2d");
@@ -142,6 +124,51 @@
         var availableBikeStands = response.map(function(day) {
             return day.available_bike_stands;
         });
+        // http://www.sitepoint.com/creating-beautiful-charts-chart-js/
+        var barData = {
+            labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+            datasets: [
+                {
+                    label: 'Average bike availabilty',
+					scaleFontColor: '#811BD6',
+                    fillColor: '#811BD6',
+                    data: availableBikes
+                },
+                {
+                    label: 'Average bike stands availability',
+                    fillColor: '#9CBABA',
+                    data: availableBikeStands
+                }
+            ]
+        };
+        {% raw %}
+		var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span class=\"legend-indicator\" style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
+        {% endraw %}
+        var context = document.getElementById('historical-graph').getContext('2d');
+        var historicalChart = new Chart(context).Bar(barData, options);
+        document.getElementById("historical-legend").innerHTML = historicalChart.generateLegend()
+
+
+        var pieData = [
+           {
+              value: {{Data.available_bikes}},
+              label: 'Available Bikes',
+              color: '#811BD6',
+              fillColor: '#811BD6',
+           },
+           {
+              value: {{Data.available_bike_stands}},
+              label: 'Available Bike Stands',
+              color: '#9CBABA',
+              fillColor: '#9CBABA'
+           }
+        ];
+
+        
+
+        var context = document.getElementById('piechart').getContext('2d');
+        var realTimeChart = new Chart(context).Pie(pieData);
+
 
         // google.charts.load('current', {'packages':['bar']});
         //   google.charts.setOnLoadCallback(drawStuff);
@@ -221,6 +248,9 @@
 
             var realTimeChart = new Chart(context).Pie(pieData);
             document.getElementById('legend-of-pie').innerHTML = realTimeChart.generateLegend();
+
+        document.getElementById('legend-of-pie').innerHTML = realTimeChart.generateLegend();
+>>>>>>> 189c9f68776751421e1ca943d1dfc64544a10507
 
 
     });

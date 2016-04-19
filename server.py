@@ -76,7 +76,7 @@ def historical_data(id, day=None):
     """
     # get all station information by id.
     db = dbQueries("bikes.db")
-    max_station = db.num_bike_stations()
+    max_station = db.max_station()
 
     if day is not None:
         if 0 < (int)(id) <= max_station and 0 <= (int)(day) <= 6:

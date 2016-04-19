@@ -60,11 +60,7 @@ var MapsModule = (function(){
 				BikesModule.getStationHistoricalInformation(this.number, 0);
 				var title = this.title.replace(/\(\w+\)/g, "");
 				title = this.title.replace(/ /g, "-");
-
-				PageModule.gotoPage("station/" + title.toLowerCase());
-
-				//window.location.href = "station/" + title.toLowerCase();
-
+				window.location.href = "/station/" + title.toLowerCase();
 			});
 
 			settings.markers.push(marker)
@@ -74,9 +70,8 @@ var MapsModule = (function(){
 	function getMapData(callback){
 
 		BikesModule.getRealTimeData(function(err, response){
-			//console.log(response);
 			if (!err){
-				console.error(response)
+				
 				placeMarkers(response);
 			}
 		});
