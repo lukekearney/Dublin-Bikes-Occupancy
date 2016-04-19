@@ -9,19 +9,15 @@
     <link rel="stylesheet" href="/static/normalise.css" />
     <link rel="stylesheet" href="/static/css/main.css" />
     
-
     <script defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAX1jmcW1cZiqkj3sK8ICOzqkTCl7lp7yg&callback=initialise" type="text/javascript"></script>
     
     <script src="/static/superagent/superagent.js"></script>
-    <!-- <script src="/static/js/handlebars/dist/handlebars.runtime.js"></script> -->
-    <!-- <script src="/static/js/templates.js"></script> -->
     <script src="/static/js/helpers.js"></script>
     <script src="/static/js/Timer.js"></script>
     <script src="/static/js/CacheModule.js"></script>
     <script src="/static/js/BikesModule.js"></script>
     <script src="/static/js/MapsModule.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-    <!-- <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script> -->
 </head>
 
 <body>
@@ -47,10 +43,11 @@
     </script>
     
     {% include "partials/header.html" %}
-    
+	<!--Showing stats for each station-->
     <div id="wrapper" class="m-wrapper">
-        <h1 class="station-heading text-center">Station number: {{Data.number}}</h2>
-        <h2 class="station-heading text-center">{{Address}}</h3>
+		<!--Using jinga2 templates for variables-->
+        <h1 class="station-heading text-center">Station number: {{Data.number}}</h1>
+        <h2 class="station-heading text-center">{{Address}}</h2>
         <div class="container">
             <div class="left-item">
                 <h3>Live data</h3>
@@ -71,8 +68,6 @@
                 
                 <div id="legend-of-pie"></div>
                 <canvas id="piechart" style="width: 50%; height: 250px;"></canvas>
-                
-
             </div>
 
 
@@ -96,9 +91,8 @@
     </div>
     
     <script>
+		
     BikesModule.getStationHistoricalInformation({{ Data.number }}, null, function(err, response){
-        // var ctx = document.getElementById("historical-graph").getContext("2d");
-
         var availableBikes = response.map(function(day){
             return day.available_bikes;
         });
@@ -123,6 +117,7 @@
                 }
             ]
         };
+		// Escape jinga symbols
         {% raw %}
 		var options = {legendTemplate : "<ul class=\"<%=name.toLowerCase()%>-legend\"><% for (var i=0; i<datasets.length; i++){%><li><span class=\"legend-indicator\" style=\"background-color:<%=datasets[i].fillColor%>\"></span><%if(datasets[i].label){%><%=datasets[i].label%><%}%></li><%}%></ul>"}
         {% endraw %}
@@ -130,7 +125,7 @@
         var historicalChart = new Chart(context).Bar(barData, options);
         document.getElementById("historical-legend").innerHTML = historicalChart.generateLegend()
 
-
+		
         var pieData = [
            {
               value: {{Data.available_bikes}},
@@ -153,7 +148,7 @@
 
 
         
-            // http://www.sitepoint.com/creating-beautiful-charts-chart-js/
+            
             var barData = {
                 labels: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
                 datasets: [
