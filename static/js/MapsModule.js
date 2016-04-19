@@ -77,37 +77,6 @@ var MapsModule = (function(){
 		});
 
 
-		//based on http://www.w3schools.com/ajax/tryit.asp?filename=tryajax_get
-		// var xmlhttp = new XMLHttpRequest();
-		// var url = "https://localhost:5000/api/static";
-
-
-		// xmlhttp.onreadystatechange = function () {
-		// 	if (xmlhttp.readyState === 4 && xmlhttp.status == 200) {
-		// 		// success
-		// 		// check if callback function is defined
-		// 		if (callback){
-		// 			// run callback
-		// 			callback(xmlhttp.response);
-		// 		} else {
-		// 			// default response to successful request
-		// 			console.log("Request completed successfully: ");
-		// 			console.log(response);
-
-		// 		}
-		// 	} else if (xmlhttp.readyState === 4 && (xmlhttp.status >= 400 || xmlhttp.status < 500)){
-		// 		// error handling
-		// 		console.log("uh oh");
-		// 		console.error(xmlhttp.statusText);
-		// 	}
-		// }
-		// xmlhttp.open("GET", url, true);
-
-		// xmlhttp.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-		// xmlhttp.setRequestHeader("Accept-Language", "en-US,en;q=0.8");
-		// xmlhttp.setRequestHeader("Pragma", "no-cache");
-
-		// xmlhttp.send();
 
 	}
 

@@ -1,4 +1,5 @@
 var BikesModule = (function(){
+	// https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript
 
 	function hasStoredRealTime(station = null) {
 		// load the data using the cache module
