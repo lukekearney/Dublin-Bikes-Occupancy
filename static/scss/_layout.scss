@@ -142,9 +142,13 @@ header{
 }
 
 .mapping{
-	height:100%;
-	width:100%;
+	height:500px;
+	width:90%;
+	margin:auto;
 	background:#ccc;
+	box-shadow:1px 1px 5px rgba(0,0,0,0.5);
+	margin-bottom:2em;
+	margin-top:1em;
 }
 
 .bar-legend {
