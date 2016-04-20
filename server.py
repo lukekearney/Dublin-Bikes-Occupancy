@@ -12,7 +12,7 @@ conn = sqlite3.connect(path + "/bikes.db")
 application = Flask(__name__)
     
 
-@application.route("/", methods = ['GET', 'POST'])
+@application.route("/")
 def hello():
     db = dbQueries("bikes.db")
     data = db.get_all_names()
