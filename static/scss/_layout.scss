@@ -13,8 +13,9 @@ body{
 button{
 	border-radius: 1em;
 	background-color: $ButtonPrimary;
-	padding: 0.5em 1em;
+	padding: 1em;
 	color: white;
+	height: inherit;
 }
 
 select {
@@ -23,7 +24,6 @@ select {
 	background-color: $DropDownPrimary;
 	padding: 1em;
 	margin: 1em;
-	text-align: center;
 	box-sizing: border-box;
 	border: 0.2em solid grey;
 	
