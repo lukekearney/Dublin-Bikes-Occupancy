@@ -5,7 +5,8 @@ import time
 import datetime
 
 class dbQueries:
-    
+    #  https://docs.python.org/2/library/sqlite3.html
+	
     def __init__(self, database_name):
         '''Connect to database[1]'''
         self.conn = sqlite3.connect(database_name)
@@ -250,7 +251,8 @@ class dbQueries:
         Parameter(s): ID of station, logged time (strings).
         Returns: Available bikes stands based on station ID and logged time specified. 
         ''' 
-        # Retrieves available bikes stands based on the number of the station and the time(epoch time)[2]. 
+        # Retrieves available bikes stands based on the number of the station and the time(epoch time). 
+		# https://pymotw.com/2/sqlite3/
         query = self.conn.execute('SELECT available_bike_stands FROM dynamic WHERE number = :number AND logged = :time ', {'number':number, 'time':time})
         for row in query:
             return row[0]
@@ -261,7 +263,8 @@ class dbQueries:
         Parameter(s): ID of station, logged time (strings).
         Returns: Available bikes based on station ID and logged time specified. 
         '''
-        # Retrieves available bikes based on the number of the station and the time(epoch time)[2]. 
+        # Retrieves available bikes based on the number of the station and the time(epoch time)
+		# https://pymotw.com/2/sqlite3/
         query = self.conn.execute('SELECT available_bikes FROM dynamic WHERE number = :number AND logged = :time ', {'number':number, 'time':time})
         for row in query:
             return row[0]
@@ -309,6 +312,12 @@ class dbQueries:
         '''
         # Retrieves the number of bikes stations[2][4].
         query = self.conn.execute('SELECT COUNT(DISTINCT number) FROM dynamic')
+        for row in query:
+            return row[0]
+
+    def max_station(self):
+        query = self.conn.execute('SELECT MAX(DISTINCT number) FROM static')
+
         for row in query:
             return row[0]
             
@@ -429,11 +438,6 @@ class dbQueries:
         #print(items)
         for item in items:
             info = self.get_day_and_time(item[0])
-
-            # print((info[0], info[1], info[2], item[1], item[0]))
-            # print(info)
-            # print(item)
-            # self.conn.execute("UPDATE dynamic SET day = " + str(info[0]) + ", hour = " + str(info[1]) + ", minute = " + str(info[2]) + "WHERE")
             query = "UPDATE dynamic SET day = " + str(info[0]) + \
             ", hour = " + str(info[1]) + \
             ", minute = " + str(info[2]) + \
@@ -524,13 +528,7 @@ class dbQueries:
         
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
-#     print(db.latest_time_logged(10))
-#     print(db.num_unique_days())
-#     print(db.get_historical_info_by_id(12))
-#     print(db.QueryBuilder().update(["number", "name"], ["10", "bob"], "mTable").where(
-#         [["name", "=", "bob"]]
-#     ).getQuery())
     
     print(db.get_all_names())
-    # db.add_time_to_db()
+ 
 

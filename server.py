@@ -76,7 +76,7 @@ def historical_data(id, day=None):
     """
     # get all station information by id.
     db = dbQueries("bikes.db")
-    max_station = db.num_bike_stations()
+    max_station = db.max_station()
 
     if day is not None:
         if 0 < (int)(id) <= max_station and 0 <= (int)(day) <= 6:
@@ -184,6 +184,12 @@ def test_num_bikes(address):
     
     address = address.replace("-", " ")
     id = db.station_to_ID(address)
+    banking = db.take_credit(id)
+    if banking == True:
+        banking = "Yes"
+    else:
+        banking = "No"
+		
     count = db.get_valid_real_time_count()
     # check if there was valid real_time data
     if count == 0:
@@ -193,7 +199,7 @@ def test_num_bikes(address):
     # fetch all data to send back
     real_time = db.get_real_time(id)
     data = real_time[0]
-    return render_template('station.html', Data=data, Address = address, mdata = formatted)
+    return render_template('station.html', Data=data, Address = address, mdata = formatted, Banking = banking )
 
 
 @application.route('/about')

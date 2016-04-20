@@ -10,15 +10,10 @@ body{
 	font-family: $text-primary;
 }
 
-body{
-	font-family: $text-primary;
-} 
-
 button{
-	width: 10%;
 	border-radius: 1em;
 	background-color: $ButtonPrimary;
-	padding: 1em;
+	padding: 0.5em 1em;
 	color: white;
 }
 
@@ -33,25 +28,26 @@ select {
 	border: 0.2em solid grey;
 	
 }
+
 header{
 	margin-left: 1em;
-	font-size: 2em;
-
+	font-size: 1em;
+	img{
+	    width: 50px;
+	    height: 50px;
 	}
 
-header img{
-    width: 100px;
-    height: 100px;
-}
+	div{
+		width: 50%;
+		display: inline-block;
+		margin-top: 1em;
+	}
 
-header div, img{
-	width: 50%;
-	display: inline-block;
-	margin-top: 1em;
-}
+	h1{
+		display:inline-block;
+		margin: 0em;
+	}
 
-header h1{
-	margin: 0em;
 }
 
 #map{
@@ -59,35 +55,81 @@ header h1{
 }
 
 .container {
-	display:flex;
+	text-align:center;
+	padding:0;
 }
 
-#leftHeader{
-	width:50%;
+.item {
+	width:100%;
+	padding:0;
+}
+
+.form-container {
+	width:100%;
+	padding:0;
+}
+
+@media screen and (min-width:30em) {
+	.container {
+		display:flex;
+		.item {
+			width:25%;
+		}
+	}
+
+	.form-container {
+		width:75%;
+		text-align:right;
+		padding-right:1em;
+	}
+}
+
+
+.left-item{
+	width:100%;
 	padding:5%;
 	float:left;
+	ul{
+		display: inline-block;
+		list-style: none;
+		padding:1%;
+		margin:1%;
+		
+	}
+
+	li{
+		font-size:1em;
+	}
 }
 
-#leftHeader ul{
-	display: inline-block;
-	list-style: none;
-	padding:1%;
-	margin:1%;
-	
+.right-item{
+	width:100%;
+	padding:5%;
 }
 
-#leftHeader li{
-	font-size:1em;
+@media screen and (min-width:30em) {
+	.left-item {
+		width:50%;
+	}
+
+	.right-item {
+		width: 50%;
+	}
 }
-#statVariable{
+
+.statVariable{
 	font-size:1.3em;
 	text-align:center;
 	color:deepskyblue;
 }
 
-#rightHeader{
-	width:50%;
-	padding:5%;
+
+
+.thirds {
+	display:flex;
+	.item {
+		width:33%;
+	}
 }
 
 #piechart{
@@ -100,34 +142,42 @@ header h1{
 }
 
 .mapping{
-	height:100%;
-	width:100%;
+	height:500px;
+	width:90%;
+	margin:auto;
 	background:#ccc;
-
+	box-shadow:1px 1px 5px rgba(0,0,0,0.5);
+	margin-bottom:2em;
+	margin-top:1em;
 }
 
-#dropdown_container{
-	height: 200px;
-	overflow-y: scroll;
-	direction: rtl;
+.bar-legend {
+	text-align:left;
 }
 
-#dropdown_content{
-	direction: lrt;
-	float: left;
+.pie-legend {
+	text-align:left;
 }
 
-#dropdown_content li{
-	//float: left;
+.legend-indicator, .pie-legend span {
+	width:1em;
+	height:1em;
+	border-radius: 1em;
+	display:inline-block;
+	margin-right:1em;
+}
+
+.station-heading {
+	margin:0;
+	padding:0;
 }
 
 ul{
 	list-style-type: none;
+	a{
+	 	text-decoration: none;
+	 }
 }
- ul a{
- 	text-decoration: none;
- }
-
 
 #address{
 	font-weight: 600;

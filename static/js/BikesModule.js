@@ -1,7 +1,5 @@
 var BikesModule = (function(){
-	function filterData(data){
-
-	}
+	// https://addyosmani.com/resources/essentialjsdesignpatterns/book/#modulepatternjavascript
 
 	function hasStoredRealTime(station = null) {
 		// load the data using the cache module
@@ -15,7 +13,7 @@ var BikesModule = (function(){
 		return true;
 
 	}
-
+	
 	function saveRealTime(data) {
 		CacheModule.save("real-time", data, 60);
 	}
@@ -29,30 +27,6 @@ var BikesModule = (function(){
         		url += "/" + day;
         	}
 
-   //      	var request = $.ajax({
-			// 	url: url,
-			// 	method: "GET",
-			// 	dataType: "text"
-			// });
-			 
-			// request.done(function( response ) {
-			// 	var data = JSON.parse(response);
-			// 	console.log(response);
-			// 	// return the station data
-			// 	if (callback){
-			// 		callback(null, data);
-			// 	}
-
-			// 	return data;
-			// });
-			 
-			// request.error(function( jqXHR, textStatus ) {
-			// 	if (callback) {
-			// 			callback (textStatus, textStatus);
-
-			// 			return textStatus;
-			// 		}
-			// });
         	
             request.get(url, function(err, response){
 				// console.log('Response ok:', response.ok);
@@ -65,12 +39,10 @@ var BikesModule = (function(){
 					if (callback){
 						callback(null, data);
 					}
-
 					return data;
 				} else {
 					if (callback) {
 						callback (err, response.text);
-
 						return response.text;
 					}
 
@@ -87,25 +59,9 @@ var BikesModule = (function(){
         	// ensure its the correct format
         	var url = "http://localhost:5000/api/station-info/" + address;
 
-   //      	var request = jQuery.ajax({
-			// 	url: url,
-			// 	method: "GET",
-			// 	dataType: "text"
-			// });
-			 
-			// request.done(function( response ) {
-			// 	var data = JSON.parse(response);
-   //  			if (callback) {
-   //  				callback(null, data);
-   //  			}
-			// });
-			 
-			// request.error(function( jqXHR, textStatus ) {
-			// 	console.error(textStatus);
-			// });
+  
         	request.get(url, function(err, response){
         		if (!err) {
-
         			var data = JSON.parse(response.text);
         			if (callback) {
         				callback(null, data);
@@ -136,24 +92,7 @@ var BikesModule = (function(){
 					}
 
 				});
-				// var request = jQuery.ajax({
-				// 	url: url,
-				// 	method: "GET",
-				// 	dataType: "text"
-				// });
-				 
-				// request.done(function( response ) {
-				// 	console.error(response);
-				// 	var json = JSON.parse(response);
-
-	   //  			callback(null, json);
-				// 	saveRealTime(json);
-				// });
-				 
-				// request.error(function( jqXHR, textStatus ) {
-				// 	console.error(textStatus);
-				// });
-        	} else {
+			} else {
 
         		
 	        	var data = CacheModule.load("real-time");

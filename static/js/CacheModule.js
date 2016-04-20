@@ -1,4 +1,5 @@
 var CacheModule = (function() {
+	// https://developer.mozilla.org/en/docs/Web/API/Window/localStorage
     var prefix = "dbbikes-";
 
     // set up the time to clear expired items in cache. Runs every hour
