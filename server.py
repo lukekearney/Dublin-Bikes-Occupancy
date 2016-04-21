@@ -11,8 +11,7 @@ conn = sqlite3.connect(path + "/bikes.db")
 
 application = Flask(__name__)
     
-
-@application.route("/", methods = ['GET', 'POST'])
+@application.route("/")
 def hello():
     db = dbQueries("bikes.db")
     data = db.get_all_names()
@@ -21,13 +20,31 @@ def hello():
     formatted = [tuple[0] for tuple in data]
     return render_template("home.html" ,mdata = formatted)
 
+@application.route('/api/station-info/<name>')
+def station(name):
+    """
+    Gets station information based on the address and loads the appropriate static template
+    """
+    db = dbQueries("bikes.db")
+    # convert name to address
+    name = helpers.url_to_name(name)
+    info = db.static_info_by_name(name)
+
+    if (len(info) == 0):
+        error = "That station does not appear to exist"
+        return render_template('404.html', mdata=error), 404
+
+    return json.dumps(info)
+
 
 @application.route('/api')
 def api():
-    return "usage:<br> api/station/STATION_ID/DAY\
-    <br>api/static"
+    return "usage:<br> api/station\
+    <br> api/static/YOUR_STATION_ID/YOUR_DAY\
+    <br> api/real-time\
+    <br> api/real-time/station/YOUR_STATION_ID"
 
-    #     db has to be inside function otherwise error about db being created in anohter thread
+    #     db has to be inside function otherwise error about db being created in another thread
     db = dbQueries("bikes.db")
     racknum = request.args.get('racknum')
     max_racknum = db.num_bike_stations()
@@ -153,24 +170,6 @@ def to_static_template(location):
     return render_template('static-template.html', name=tempName, address=tempAddress,
                            position=tempPosition, available_bikes=availableBikes,
                            available_bike_stands=availableBikeStands)
-
-
-@application.route('/api/station-info/<name>')
-def station(name):
-    """
-    Gets station information based on the address and loads the appropriate static template
-    """
-    db = dbQueries("bikes.db")
-    # convert name to address
-    name = helpers.url_to_name(name)
-    info = db.static_info_by_name(name)
-
-    if (len(info) == 0):
-        error = "That station does not appear to exist"
-        return render_template('404.html', mdata=error), 404
-
-    return json.dumps(info)
-
 	
 
 @application.route("/station/<address>")
@@ -184,6 +183,12 @@ def test_num_bikes(address):
     
     address = address.replace("-", " ")
     id = db.station_to_ID(address)
+    banking = db.take_credit(id)
+    if banking == True:
+        banking = "Yes"
+    else:
+        banking = "No"
+		
     count = db.get_valid_real_time_count()
     # check if there was valid real_time data
     if count == 0:
@@ -193,33 +198,7 @@ def test_num_bikes(address):
     # fetch all data to send back
     real_time = db.get_real_time(id)
     data = real_time[0]
-    return render_template('station.html', Data=data, Address = address, mdata = formatted)
-
-
-@application.route('/about')
-def about():
-    data = [
-        {
-            "id": 1,
-            "name": "Some aname"
-
-        },
-
-        {
-            "id": 2,
-            "name": "Some aname2"
-
-        },
-
-        {
-            "id": 2,
-            "name": "Some aname3"
-
-        }
-    ]
-
-    return render_template('test.html', mData=data)
-
+    return render_template('station.html', Data=data, Address = address, mdata = formatted, Banking = banking )
 
 @application.route('/static/test')
 def testing():
@@ -229,5 +208,3 @@ def testing():
 if __name__ == "__main__":
     application.debug = True
     application.run(host='0.0.0.0')
-
-# localhost:5000/api?racknum=1
