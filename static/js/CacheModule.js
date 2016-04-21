@@ -1,4 +1,5 @@
 var CacheModule = (function() {
+	// https://developer.mozilla.org/en/docs/Web/API/Window/localStorage
     var prefix = "dbbikes-";
 
     // set up the time to clear expired items in cache. Runs every hour
@@ -18,6 +19,10 @@ var CacheModule = (function() {
         }
     }
 
+    function log(message) {
+        console.log("CACHE:" + message);
+    }
+
     function clearExpired(key = null){
         // removes old data from cache, if it has expired. The optional key can be supplied to only target specific storage
         if (window.localStorage) {
@@ -27,16 +32,22 @@ var CacheModule = (function() {
             if (key) {
                 // check if the key exists
                 if (exists(key)) {  
+                   
                     // check if it has expired
                     data = JSON.parse(getItem(key));
                     if (data.expires) {
+                        
                         // if the current time is higher than the expiry time in the data
                         if (data.expires <= currentTime) {
+                            
                             // delete from localStorage
+                            
                             removeItem(key);
+                            
                             // return true if removed
                             return true;
                         } else {
+                            
                             //console.log(key + " has not expired");
                             // return false if not expired
                             return false;
@@ -55,7 +66,7 @@ var CacheModule = (function() {
                     
                     if (localStorage.key(i).match(re)){
                         var key = localStorage.key(i).substring(prefix.length);
-                        console.log("key is: " + key);
+                       
                         // recursively call to remove this key. Check if its removed
                         if(clearExpired(key)){
                             // decrement i to account for removed element
@@ -88,10 +99,11 @@ var CacheModule = (function() {
             // saves into local storage
             // check if localStorage is supported
             if (window.localStorage) {
+                
                 // check if it exists in cache already and updates data if needs be
                 var data;
                 // calculates expiry time
-                var expiryTime = Math.floor(Date.now() / 1000) + expires;
+                var expiryTime = Math.floor(Date.now() / 1000) + 1;
 
 
                 data = {
@@ -131,6 +143,6 @@ var CacheModule = (function() {
 
         removeExpired: function(key = null) {
             clearExpired(key);
-        },
+        }
     }
 }())

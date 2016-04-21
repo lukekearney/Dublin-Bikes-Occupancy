@@ -5,7 +5,8 @@ import time
 import datetime
 
 class dbQueries:
-    
+    #  https://docs.python.org/2/library/sqlite3.html
+	
     def __init__(self, database_name):
         '''Connect to database[1]'''
         self.conn = sqlite3.connect(database_name)
@@ -250,7 +251,8 @@ class dbQueries:
         Parameter(s): ID of station, logged time (strings).
         Returns: Available bikes stands based on station ID and logged time specified. 
         ''' 
-        # Retrieves available bikes stands based on the number of the station and the time(epoch time)[2]. 
+        # Retrieves available bikes stands based on the number of the station and the time(epoch time). 
+		# https://pymotw.com/2/sqlite3/
         query = self.conn.execute('SELECT available_bike_stands FROM dynamic WHERE number = :number AND logged = :time ', {'number':number, 'time':time})
         for row in query:
             return row[0]
@@ -261,7 +263,8 @@ class dbQueries:
         Parameter(s): ID of station, logged time (strings).
         Returns: Available bikes based on station ID and logged time specified. 
         '''
-        # Retrieves available bikes based on the number of the station and the time(epoch time)[2]. 
+        # Retrieves available bikes based on the number of the station and the time(epoch time)
+		# https://pymotw.com/2/sqlite3/
         query = self.conn.execute('SELECT available_bikes FROM dynamic WHERE number = :number AND logged = :time ', {'number':number, 'time':time})
         for row in query:
             return row[0]
@@ -311,6 +314,12 @@ class dbQueries:
         query = self.conn.execute('SELECT COUNT(DISTINCT number) FROM dynamic')
         for row in query:
             return row[0]
+
+    def max_station(self):
+        query = self.conn.execute('SELECT MAX(DISTINCT number) FROM static')
+
+        for row in query:
+            return row[0]
             
     def take_credit(self, number):
         '''
@@ -331,11 +340,11 @@ class dbQueries:
         Returns: an array of dictionaries containing occupancy data, day, hour and minute
         '''
         # the keys to fetch
-        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+        keys = ["number", "avg(bike_stands)", "avg(available_bike_stands)", "avg(available_bikes)", "day", "hour", "minute"]
 
         query = self.QueryBuilder().select(keys, "dynamic").where([
             ["number", "=", id]
-        ]).getQuery()
+        ]).groupBy("day").getQuery()
 
         c = self.conn.cursor()
 
@@ -343,6 +352,7 @@ class dbQueries:
         items = c.fetchall()
 
         # labels each result
+        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
         grouped_items = [self.label_results(keys, item) for item in items]
 
         return grouped_items
@@ -354,11 +364,11 @@ class dbQueries:
         Returns: an array of dictionaries containing occupancy data, day, hour and minute
         '''
         # the keys to fetch
-        keys = ["number", "bike_stands", "available_bike_stands", "available_bikes", "day", "hour", "minute"]
+        keys = ["number", "avg(bike_stands)", "avg(available_bike_stands)", "avg(available_bikes)", "day", "hour", "minute"]
 
         query = self.QueryBuilder().select(keys, "dynamic").where([
             ["number", "=", id], ["day", "=", day]
-        ]).getQuery()
+        ]).groupBy("day").getQuery()
 
         c = self.conn.cursor()
 
@@ -367,7 +377,7 @@ class dbQueries:
 
         # labels each result
         grouped_items = [self.label_results(keys, item) for item in items]
-
+        print(grouped_items)
         return grouped_items
             
     
@@ -428,11 +438,6 @@ class dbQueries:
         #print(items)
         for item in items:
             info = self.get_day_and_time(item[0])
-
-            # print((info[0], info[1], info[2], item[1], item[0]))
-            # print(info)
-            # print(item)
-            # self.conn.execute("UPDATE dynamic SET day = " + str(info[0]) + ", hour = " + str(info[1]) + ", minute = " + str(info[2]) + "WHERE")
             query = "UPDATE dynamic SET day = " + str(info[0]) + \
             ", hour = " + str(info[1]) + \
             ", minute = " + str(info[2]) + \
@@ -469,7 +474,7 @@ class dbQueries:
                 "updated": int(time.time())
             }
             # check if the data exists
-            if (not self.exists(d["number"], "real_time")) or update:
+            if (not self.exists(d["number"], "real_time")) and not update:
                 # insert the data
                 print("fetching new data")
                 query = db.QueryBuilder().insert([key for key in new_data], [[new_data[key] for key in new_data]], "real_time").getQuery()
@@ -477,6 +482,7 @@ class dbQueries:
                 self.conn.commit()
 
             else:
+                print("updating new data")
                 query = db.QueryBuilder().update([key for key in new_data], [new_data[key] for key in new_data], "real_time").where(
                     [["number", "=", d["number"]]]
                 ).getQuery()
@@ -506,6 +512,12 @@ class dbQueries:
         grouped_items = [self.label_results(label_keys, item) for item in results]
 
         return grouped_items
+    
+    def get_all_names(self):
+        c = self.conn.cursor()
+        data = c.execute("SELECT name FROM static ORDER BY name")
+        data = data.fetchall()
+        return data
 
     def close_connection(self):
         '''
@@ -516,11 +528,7 @@ class dbQueries:
         
 if(__name__ == "__main__"):
     db = dbQueries("../bikes.db")
-    print(db.latest_time_logged(10))
-    print(db.num_unique_days())
-    print(db.get_historical_info_by_id(12))
-    print(db.QueryBuilder().update(["number", "name"], ["10", "bob"], "mTable").where(
-        [["name", "=", "bob"]]
-    ).getQuery())
-    # db.add_time_to_db()
+    
+    print(db.get_all_names())
+ 
 

@@ -6,39 +6,185 @@ body, html{
 	box-sizing: border-box;
 }
 
+body{
+	font-family: $text-primary;
+}
+
+button{
+	border-radius: 1em;
+	background-color: $ButtonPrimary;
+	padding: 1em;
+	color: white;
+	height: inherit;
+}
+
+select {
+	width: 50%;
+	border-radius: 1em;
+	background-color: $DropDownPrimary;
+	padding: 1em;
+	margin: 1em;
+	box-sizing: border-box;
+	border: 0.2em solid grey;
+	
+}
+
+header{
+	margin-left: 1em;
+	font-size: 1em;
+	img{
+	    width: 50px;
+	    height: 50px;
+	}
+
+	div{
+		width: 50%;
+		display: inline-block;
+		margin-top: 1em;
+	}
+
+	h1{
+		display:inline-block;
+		margin: 0em;
+	}
+
+	a {
+	    color:#000;
+	}
+
+}
+
+#map{
+	padding:2%;
+}
+
+.container {
+	text-align:center;
+	padding:0;
+}
+
+.item {
+	width:100%;
+	padding:0;
+}
+
+.form-container {
+	width:100%;
+	padding:0;
+}
+
+@media screen and (min-width:30em) {
+	.container {
+		display:flex;
+		.item {
+			width:25%;
+		}
+	}
+
+	.form-container {
+		width:75%;
+		text-align:right;
+		padding-right:1em;
+	}
+}
+
+
+.left-item{
+	width:100%;
+	padding:5%;
+	float:left;
+	ul{
+		display: inline-block;
+		list-style: none;
+		padding:1%;
+		margin:1%;
+		
+	}
+
+	li{
+		font-size:1em;
+	}
+}
+
+.right-item{
+	width:100%;
+	padding:5%;
+}
+
+@media screen and (min-width:30em) {
+	.left-item {
+		width:50%;
+	}
+
+	.right-item {
+		width: 50%;
+	}
+}
+
+.statVariable{
+	font-size:1.3em;
+	text-align:center;
+	color:deepskyblue;
+}
+
+
+
+.thirds {
+	display:flex;
+	.item {
+		width:33%;
+	}
+}
+
+#piechart{
+	width:300%;
+	height:300%;
+}
+
 .m-wrapper{
 	height:100%;
 }
 
 .mapping{
-	height:100%;
-	width:100%;
+	height:500px;
+	width:90%;
+	margin:auto;
 	background:#ccc;
+	box-shadow:1px 1px 5px rgba(0,0,0,0.5);
+	margin-bottom:2em;
+	margin-top:1em;
 }
 
-body{
-	background-color: $BackgroundGrey;
-	font-family: $text-primary;
-} 
-<<<<<<< HEAD
-//test comment
-=======
->>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
+.bar-legend {
+	text-align:left;
+}
 
-button{
+.pie-legend {
+	text-align:left;
+}
+
+.legend-indicator, .pie-legend span {
+	width:1em;
+	height:1em;
 	border-radius: 1em;
-	background-color: $ButtonGreen;
+	display:inline-block;
+	margin-right:1em;
 }
 
-#dropdown{
-	background-color: $DropDownGrey;
-	border: 0.5em, solid $DropDownBorder;
+.station-heading {
+	margin:0;
+	padding:0;
 }
-<<<<<<< HEAD
-=======
 
-header img{
-    width:70px;
-    height: 70px;
+ul{
+	list-style-type: none;
+	a{
+	 	text-decoration: none;
+	 }
 }
->>>>>>> 00a60ac1d78d62f1734516ad31bc7cfe6e4632e5
+
+#address{
+	font-weight: 600;
+	font-size:2em;
+
+}

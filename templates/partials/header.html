@@ -1,0 +1,19 @@
+<header class="container">
+	<div class="item">
+        <a href="/"><img id="logo" src="../static/images/logo-cropped.png">
+    	<h1>Dublin Bikes</h1></a>
+        
+    </div>
+    <div class="form-container">
+        <form name = 'dropdownform' id="Inputs">
+            <select name = 'station'>
+                {% for name in mdata %}
+                <option value = '/station/{{name | replace(" ", "-")}}'>{{name}}</option>
+                {% endfor %}
+             </select>
+    <!--            type = button to stop age reloading-->
+            <button type = "button" onclick = "GoToURL(this.form)">GO!</button>
+
+        </form>
+    </div>
+</header>
