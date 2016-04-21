@@ -1,5 +1,3 @@
-__author__ = "Ellen Rushe"
-
 import sqlite3
 import time
 import datetime
