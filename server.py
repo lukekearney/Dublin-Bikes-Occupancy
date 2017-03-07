@@ -5,27 +5,25 @@ import sqlite3, os, json
 from src.dbQueries import dbQueries
 from src import helpers
 
-path = os.path.dirname(os.path.realpath(__file__))
+path = "/var/www/DBApp/bikes.db"
 
-conn = sqlite3.connect(path + "/bikes.db")
-
-application = Flask(__name__)
+app = Flask(__name__)
     
-@application.route("/")
+@app.route("/")
 def hello():
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     data = db.get_all_names()
     
     # change list of tuples to list
     formatted = [tuple[0] for tuple in data]
     return render_template("home.html" ,mdata = formatted)
 
-@application.route('/api/station-info/<name>')
+@app.route('/api/station-info/<name>')
 def station(name):
     """
     Gets station information based on the address and loads the appropriate static template
     """
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     # convert name to address
     name = helpers.url_to_name(name)
     info = db.static_info_by_name(name)
@@ -37,7 +35,7 @@ def station(name):
     return json.dumps(info)
 
 
-@application.route('/api')
+@app.route('/api')
 def api():
     return "usage:<br> api/station\
     <br> api/static/YOUR_STATION_ID/YOUR_DAY\
@@ -45,7 +43,7 @@ def api():
     <br> api/real-time/station/YOUR_STATION_ID"
 
     #     db has to be inside function otherwise error about db being created in another thread
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     racknum = request.args.get('racknum')
     max_racknum = db.num_bike_stations()
     if int(racknum) > max_racknum:
@@ -59,10 +57,10 @@ def api():
 
 
 # Just adding a route to pull down static data. This can be adjusted later
-@application.route('/api/static')
+@app.route('/api/static')
 def static_api():
     # open db connection
-    conn = sqlite3.connect(path + "/bikes.db")
+    conn = sqlite3.connect(path)
 
     c = conn.cursor()
     data = c.execute("SELECT number, name, address, position_lat, position_long, banking FROM static ORDER BY number")
@@ -85,14 +83,14 @@ def static_api():
     return json.dumps(data)
 
 
-@application.route('/api/station/<int:id>')
-@application.route('/api/station/<int:id>/<int:day>')
+@app.route('/api/station/<int:id>')
+@app.route('/api/station/<int:id>/<int:day>')
 def historical_data(id, day=None):
     """
     gets historical data for a station by id. Used by the client side
     """
     # get all station information by id.
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     max_station = db.max_station()
 
     if day is not None:
@@ -111,9 +109,12 @@ def historical_data(id, day=None):
     return json.dumps(info)
 
 
-@application.route("/api/real-time")
+@app.route("/api/real-time")
 def real_time():
-    db = dbQueries("bikes.db")
+    f = open("/tmp/db.log","a")
+    f.write("server.py " + path + "\n")
+    f.close()
+    db = dbQueries(path)
     count = db.get_valid_real_time_count()
     # check if there was valid real_time data
     print(count)
@@ -130,9 +131,9 @@ def real_time():
     return json.dumps(real_time)
 
 
-@application.route("/api/real-time/station/<id>")
+@app.route("/api/real-time/station/<id>")
 def real_time_by_station(id):
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     count = db.get_valid_real_time_count()
     # check if there was valid real_time data
     if count == 0:
@@ -146,19 +147,19 @@ def real_time_by_station(id):
     return json.dumps(real_time)
 
 
-@application.route("/database/setup")
+@app.route("/database/setup")
 def setup_db():
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     db.setup_db()
     return "setting up database"
 
 
-@application.route('/to_static_template/<location>')
+@app.route('/to_static_template/<location>')
 def to_static_template(location):
     '''
     Used for passing information to the static template
     '''
-    database = dbQueries("bikes.db")
+    database = dbQueries(path)
     name = location
     id = station_to_ID(name)
     address = station_address_by_ID(id)
@@ -172,9 +173,9 @@ def to_static_template(location):
                            available_bike_stands=availableBikeStands)
 	
 
-@application.route("/station/<address>")
+@app.route("/station/<address>")
 def test_num_bikes(address):
-    db = dbQueries("bikes.db")
+    db = dbQueries(path)
     
     mdata = db.get_all_names()
     
@@ -200,11 +201,11 @@ def test_num_bikes(address):
     data = real_time[0]
     return render_template('station.html', Data=data, Address = address, mdata = formatted, Banking = banking )
 
-@application.route('/static/test')
+@app.route('/static/test')
 def testing():
     return render_template('SpecRunner.html')
 
 
 if __name__ == "__main__":
-    application.debug = True
-    application.run(host='0.0.0.0')
+    app.debug = True
+    app.run(host='0.0.0.0')

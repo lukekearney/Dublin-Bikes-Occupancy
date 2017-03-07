@@ -21,7 +21,7 @@ var BikesModule = (function(){
     return {
         getStationHistoricalInformation: function(number, day = null, callback = null){
         	var request = window.superagent;	
-        	var url = "http://localhost:5000/api/station/" + number;
+        	var url = "/api/station/" + number;
         	console.log(day);
         	if (day != null){
         		url += "/" + day;
@@ -57,7 +57,7 @@ var BikesModule = (function(){
         	var request = window.superagent;
         	address = address.replace(/ /g, "-");
         	// ensure its the correct format
-        	var url = "http://localhost:5000/api/station-info/" + address;
+        	var url = "/api/station-info/" + address;
 
   
         	request.get(url, function(err, response){
@@ -79,7 +79,7 @@ var BikesModule = (function(){
         	CacheModule.removeExpired();
         	
         	if (!hasStoredRealTime()) {
-        		var url = "http://localhost:5000/api/real-time";
+        		var url = "/api/real-time";
         		
 				request.get(url, function(err, response){
 					// console.log('Response ok:', response.ok);

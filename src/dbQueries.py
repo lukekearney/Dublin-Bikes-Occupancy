@@ -7,8 +7,13 @@ class dbQueries:
 	
     def __init__(self, database_name):
         '''Connect to database[1]'''
+	f = open("/tmp/db.log", "a")
+	f.write(database_name + "\n")
+	f.close()
         self.conn = sqlite3.connect(database_name)
 
+    def __del__(self):
+        self.close_connection()
     def label_results(self, keys, results):
         '''
         Parameter(s): a list of keys and a list of results
@@ -460,7 +465,6 @@ class dbQueries:
         Parameter(s): a list of python dictionaries to add to the database
         Returns: Nothing. Updates values in the table
         '''
-        db = dbQueries("bikes.db")
         c = self.conn.cursor()
         for d in data:
             new_data = {
@@ -475,13 +479,13 @@ class dbQueries:
             if (not self.exists(d["number"], "real_time")) and not update:
                 # insert the data
                 print("fetching new data")
-                query = db.QueryBuilder().insert([key for key in new_data], [[new_data[key] for key in new_data]], "real_time").getQuery()
+                query = self.QueryBuilder().insert([key for key in new_data], [[new_data[key] for key in new_data]], "real_time").getQuery()
                 c.execute(query["sql"], query["values"])
                 self.conn.commit()
 
             else:
                 print("updating new data")
-                query = db.QueryBuilder().update([key for key in new_data], [new_data[key] for key in new_data], "real_time").where(
+                query = self.QueryBuilder().update([key for key in new_data], [new_data[key] for key in new_data], "real_time").where(
                     [["number", "=", d["number"]]]
                 ).getQuery()
                 c.execute(query["sql"], query["values"])
