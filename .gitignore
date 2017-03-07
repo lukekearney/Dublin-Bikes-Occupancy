@@ -8,6 +8,7 @@ out
 gen
 myprojectenv
 venv
+tags
 myproject.sock
 tests/__pycache__
 src/__pycache__
